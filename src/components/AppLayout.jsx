@@ -25,7 +25,6 @@ const AppLayout = ({ children }) => {
         textAlign: "center",
         padding: "10px",
         bottom: 0,
-        width: "100%",
       }}>
         <p>© KISHORE KUMAR J 2024 | ALL RIGHTS RESERVED.</p>
       </footer>
