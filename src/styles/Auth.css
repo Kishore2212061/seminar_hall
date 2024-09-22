@@ -1,4 +1,3 @@
-/* General Styles */
 body {
   background-color: #f8f9fa;
   font-family: Arial, sans-serif;
@@ -10,17 +9,17 @@ body {
 .flex-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center items horizontally */
-  justify-content: center; /* Align items to the start */
-  padding: 20px; /* Add padding to the flex container */
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 /* Auth Container Styles (Login and Register) */
 .auth-container {
-  background-color: #235CFA; /* Header background */
+  background-color: #235CFA;
   margin: 40px;
-  padding: 3rem; /* Adjust padding for spacing */
-  border-radius: 40px;
+  padding: 2rem; /* Reduced padding for better spacing on mobile */
+  border-radius: 20px; /* Adjusted radius for smaller screens */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
   border: 8px solid;
@@ -28,37 +27,44 @@ body {
 
 .auth-container h2 {
   margin-bottom: 1px;
-  font-size: 2rem;
-  color: #fff; /* Changed to white for contrast */
+  font-size: 1.75rem; /* Reduced font size for mobile view */
+  color: #fff;
 }
 
 /* Hall Status Container Styles */
 .hall-status-container {
   background-color: #ffffff;
-  margin: 35px;
-  padding: 5rem;
-  border-radius: 40px;
+  margin: 20px;
+  padding: 3rem; /* Reduced padding */
+  border-radius: 20px; /* Adjusted for mobile */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-.bookings-container {
-  padding: 20px;
-  margin-top: 20px;
+/* Ensure the table is wrapped in a responsive container */
+/* Ensure the table is wrapped in a responsive container */
+.bookings-container{
+  width: 100%; /* Ensure the wrapper takes the full width */
+  max-width: 100%; /* Prevent overflow */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  margin: 0 auto; /* Center the wrapper */
+  white-space: nowrap; /* Prevent wrapping of table content */
 }
 
+/* Table Styling */
 .bookings-table {
-  width: 100%;
+  width: 150%; /* Increase the width of the table */
+  max-width: 100%; /* Ensure it doesn't exceed the container */
   border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 1rem;
+  margin: 10px 0;
+  font-size: 0.9rem;
   text-align: center;
 }
 
 .bookings-table th,
 .bookings-table td {
   border: 1px solid black;
-  padding: 10px;
+  padding: 8px;
 }
 
 .bookings-table th {
@@ -71,28 +77,32 @@ body {
 }
 
 .bookings-table td {
-  word-wrap: break-word; /* Ensure text wrapping for long content */
+  word-wrap: break-word; /* Ensure text wraps within the cell */
+  max-width: 200px; /* Optional: Prevent long text from making cells too wide */
 }
 
-.bookings-table button {
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
+/* Responsive Styles for small screens */
+@media (min-width: 100px) and (max-width: 768px) {
+  .bookings-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+  }
 
-.bookings-table button:hover {
-  background-color: #d63031;
+  .bookings-table {
+    font-size: 0.5rem; /* Slightly smaller text on mobile */
+    width: 100%; /* Ensure table stays within the screen */
+  }
+
+  .bookings-table td {
+    max-width: 100px; /* Constrain cell width further on small screens */
+  }
 }
 
 /* Button and Input Styles */
 button, input {
-  width: 100%; /* Full width */
-  padding: 10px; /* Padding */
-  margin: 10px 0; /* Spacing */
-  border-radius: 5px; /* Rounded corners */
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border-radius: 5px;
 }
 
 button {
@@ -110,9 +120,9 @@ button:hover {
 /* Navbar Styles */
 .navbar {
   display: flex;
-  justify-content: center; /* Center items */
+  justify-content: center;
   background-color: #235CFA;
-  padding: 10px;
+  padding: 8px;
 }
 
 nav ul {
@@ -123,12 +133,12 @@ nav ul {
 
 nav ul li {
   display: inline;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 nav ul li a {
   text-decoration: none;
-  font-size: 30px;
+  font-size: 24px;
   color: white;
 }
 
@@ -141,27 +151,26 @@ footer {
   background-color: #343a40;
   color: #ffffff;
   text-align: center;
-  padding: 20px; /* Add padding to the footer */
+  padding: 15px; /* Adjusted for mobile view */
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
+/* Styles for screens between 100px and 768px */
+@media (min-width: 100px) and (max-width: 768px) {
+
   .auth-container, .hall-status-container {
-    padding: 2rem; /* Reduce padding on smaller screens */
-    margin: 20px; /* Adjust margin */
+    max-width: 220px;
+    padding: 1.5rem; /* Reduced padding for small screens */
+    margin: 10px;  /* Adjusted margin for small screens */
   }
 
   .auth-container h2 {
-    font-size: 1.5rem; /* Reduce heading size for small screens */
-  }
-
-  .bookings-table {
-    font-size: 0.9rem; /* Reduce table font size for better fit */
+    font-size: 1.25rem; /* Adjusted heading size */
   }
 
   button, input {
-    padding: 8px; /* Reduce padding for inputs and buttons */
-    font-size: 1rem; /* Adjust font size */
+    padding: 6px; /* Further reduced padding */
+    font-size: 0.85rem; /* Adjusted font size */
   }
 
   nav ul li {
@@ -170,42 +179,6 @@ footer {
   }
 
   nav ul li a {
-    font-size: 24px; /* Reduce navbar font size */
+    font-size: 20px; /* Adjusted navbar font size */
   }
-}
-
-/* Extra small screens */
-@media (max-width: 480px) {
-  .auth-container, .hall-status-container {
-    padding: 1.5rem;
-  }
-
-  .bookings-table {
-    font-size: 0.8rem;
-  }
-
-  nav ul li a {
-    font-size: 20px; /* Smaller font size for very small screens */
-  }
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .auth-container, .hall-status-container {
-    padding:20rem;
-  
-  }
-}
-.auth-container button:hover {
-  background-color: black;
-  transform: scale(1.02);
-}
-
-.auth-container input:focus {
-  border-color:#235CFA;
-  outline: none;
-}
-
-.hall-status-container button:hover {
-  background-color:black;
 }
