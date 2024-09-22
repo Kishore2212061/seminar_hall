@@ -1,0 +1,211 @@
+/* General Styles */
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Flex Container for Main Layout */
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Align items to the start */
+  padding: 20px; /* Add padding to the flex container */
+}
+
+/* Auth Container Styles (Login and Register) */
+.auth-container {
+  background-color: #235CFA; /* Header background */
+  margin: 40px;
+  padding: 3rem; /* Adjust padding for spacing */
+  border-radius: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 8px solid;
+}
+
+.auth-container h2 {
+  margin-bottom: 1px;
+  font-size: 2rem;
+  color: #fff; /* Changed to white for contrast */
+}
+
+/* Hall Status Container Styles */
+.hall-status-container {
+  background-color: #ffffff;
+  margin: 35px;
+  padding: 5rem;
+  border-radius: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.bookings-container {
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.bookings-table th,
+.bookings-table td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.bookings-table th {
+  background-color: #235CFA;
+  color: white;
+}
+
+.bookings-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.bookings-table td {
+  word-wrap: break-word; /* Ensure text wrapping for long content */
+}
+
+.bookings-table button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.bookings-table button:hover {
+  background-color: #d63031;
+}
+
+/* Button and Input Styles */
+button, input {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding */
+  margin: 10px 0; /* Spacing */
+  border-radius: 5px; /* Rounded corners */
+}
+
+button {
+  background-color: #235CFA;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: black;
+}
+
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: center; /* Center items */
+  background-color: #235CFA;
+  padding: 10px;
+}
+
+nav ul {
+  list-style-type: none;
+  width: 100%;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  font-size: 30px;
+  color: white;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+  background-color: #343a40;
+  color: #ffffff;
+  text-align: center;
+  padding: 20px; /* Add padding to the footer */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .auth-container, .hall-status-container {
+    padding: 2rem; /* Reduce padding on smaller screens */
+    margin: 20px; /* Adjust margin */
+  }
+
+  .auth-container h2 {
+    font-size: 1.5rem; /* Reduce heading size for small screens */
+  }
+
+  .bookings-table {
+    font-size: 0.9rem; /* Reduce table font size for better fit */
+  }
+
+  button, input {
+    padding: 8px; /* Reduce padding for inputs and buttons */
+    font-size: 1rem; /* Adjust font size */
+  }
+
+  nav ul li {
+    display: block;
+    margin-bottom: 10px; /* Stack navbar items vertically */
+  }
+
+  nav ul li a {
+    font-size: 24px; /* Reduce navbar font size */
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .auth-container, .hall-status-container {
+    padding: 1.5rem;
+  }
+
+  .bookings-table {
+    font-size: 0.8rem;
+  }
+
+  nav ul li a {
+    font-size: 20px; /* Smaller font size for very small screens */
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .auth-container, .hall-status-container {
+    padding:20rem;
+  
+  }
+}
+.auth-container button:hover {
+  background-color: black;
+  transform: scale(1.02);
+}
+
+.auth-container input:focus {
+  border-color:#235CFA;
+  outline: none;
+}
+
+.hall-status-container button:hover {
+  background-color:black;
+}
