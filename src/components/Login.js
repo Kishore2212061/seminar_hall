@@ -15,6 +15,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/hall-status");
     } catch (error) {
+      alert("Invalid Password.");
       console.error(error);
     }
   };

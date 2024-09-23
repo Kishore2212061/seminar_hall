@@ -9,6 +9,7 @@ const HallStatus = () => {
   const [endTime, setEndTime] = useState("");
   const [purpose, setPurpose] = useState("");
   const [staffName, setStaffName] = useState("");
+  const [password, setPassword] = useState(""); // Add password for booking
   const [existingBookings, setExistingBookings] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
   const user = auth.currentUser;
@@ -60,8 +61,8 @@ const HallStatus = () => {
     if (isBooking) return; // Prevent further clicks while booking
     setIsBooking(true); // Disable the button
 
-    if (!startTime || !endTime || !purpose || !staffName) {
-      alert("Please fill in all fields.");
+    if (!startTime || !endTime || !purpose || !staffName || !password) { // Check for password as well
+      alert("Please fill in all fields, including password.");
       setIsBooking(false);
       return;
     }
@@ -101,13 +102,14 @@ const HallStatus = () => {
         purpose,
         staffName,
         bookedBy: user.email,
+        password, // Store password in Firestore
       });
 
       console.log("Booking added with ID: ", docRef.id);
 
       setExistingBookings((prev) => [
         ...prev,
-        { id: docRef.id, startTime, endTime, purpose, staffName, department, bookedBy: user.email },
+        { id: docRef.id, startTime, endTime, purpose, staffName, department, bookedBy: user.email, password },
       ]);
 
       // Clear input fields
@@ -115,6 +117,7 @@ const HallStatus = () => {
       setEndTime("");
       setPurpose("");
       setStaffName("");
+      setPassword(""); // Clear password field
 
     } catch (error) {
       console.error("Error adding booking: ", error);
@@ -123,13 +126,19 @@ const HallStatus = () => {
     }
   };
 
-  const handleCancelBooking = async (bookingId) => {
-    try {
-      await deleteDoc(doc(db, "bookings", bookingId));
-      setExistingBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
-      console.log("Booking cancelled");
-    } catch (error) {
-      console.error("Error cancelling booking: ", error);
+  const handleCancelBooking = async (bookingId, bookingPassword) => {
+    const enteredPassword = prompt("Enter the password to cancel this booking:"); // Ask for password input
+
+    if (enteredPassword === bookingPassword) { // Match the entered password with the booking's password
+      try {
+        await deleteDoc(doc(db, "bookings", bookingId));
+        setExistingBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
+        console.log("Booking cancelled");
+      } catch (error) {
+        console.error("Error cancelling booking: ", error);
+      }
+    } else {
+      alert("Incorrect password. Unable to cancel the booking.");
     }
   };
 
@@ -191,6 +200,18 @@ const HallStatus = () => {
             }}
           />
         </label>
+        <label>
+          Give A Secret Key:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+            }}
+          />
+        </label>
         <button onClick={handleBooking} disabled={isBooking}>
           {isBooking ? "Booking..." : "Book Hall"}
         </button>
@@ -218,7 +239,7 @@ const HallStatus = () => {
                     <td>{booking.purpose}</td>
                     <td>{booking.staffName}</td>
                     <td>
-                      <button onClick={() => handleCancelBooking(booking.id)}>Cancel</button>
+                      <button onClick={() => handleCancelBooking(booking.id, booking.password)}>Cancel</button>
                     </td>
                   </tr>
                 ))}

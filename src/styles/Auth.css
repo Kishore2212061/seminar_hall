@@ -33,12 +33,14 @@ body {
 
 /* Hall Status Container Styles */
 .hall-status-container {
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   margin: 20px;
   padding: 3rem; /* Reduced padding */
   border-radius: 20px; /* Adjusted for mobile */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
+  border: 10px solid black;
+  color: black;
 }
 
 /* Ensure the table is wrapped in a responsive container */

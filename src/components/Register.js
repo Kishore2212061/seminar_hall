@@ -11,7 +11,7 @@ const Register = () => {
   const [secretKey, setSecretKey] = useState("");
   const navigate = useNavigate();
 
-  const ADMIN_SECRET_KEY = "9994278069"; // Your actual secret key
+  const ADMIN_SECRET_KEY = "nec@2261"; // Your actual secret key
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ const Register = () => {
           required
         />
         <input
-          type="text"
+          type="password"
           placeholder="Secret Key"
           value={secretKey}
           onChange={(e) => setSecretKey(e.target.value)}
