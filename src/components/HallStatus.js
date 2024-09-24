@@ -1,26 +1,34 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import "../styles/Auth.css";
+=======
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase.js"; // Assumed Firebase is initialized in this file
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
 
-const HallStatus = () => {
+const HallStatus = ({ department, user }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [purpose, setPurpose] = useState("");
   const [staffName, setStaffName] = useState("");
-  const [password, setPassword] = useState(""); // Add password for booking
-  const [existingBookings, setExistingBookings] = useState([]);
+  const [sessionPassword, setSessionPassword] = useState("");
   const [isBooking, setIsBooking] = useState(false);
-  const user = auth.currentUser;
-  const department = user.email.slice(0, 3).toUpperCase();
-
-  // Convert time to Indian Standard Time (IST)
-  const convertToIST = (date) => {
-    return new Date(date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-  };
+  const [existingBookings, setExistingBookings] = useState([]);
 
   useEffect(() => {
+<<<<<<< HEAD
     const fetchBookings = async () => {
       const q = query(collection(db, "bookings"), where("department", "==", department));
       const querySnapshot = await getDocs(q);
@@ -66,6 +74,31 @@ const HallStatus = () => {
   
     if (!startTime || !endTime || !purpose || !staffName || !password) { // Check for password as well
       alert("Please fill in all fields, including password.");
+=======
+    fetchExistingBookings();
+  }, [department]);
+
+  const fetchExistingBookings = async () => {
+    try {
+      const q = query(collection(db, "bookings"), where("department", "==", department));
+      const querySnapshot = await getDocs(q);
+      const bookings = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setExistingBookings(bookings);
+    } catch (error) {
+      console.error("Error fetching bookings: ", error);
+    }
+  };
+
+  const handleBooking = async () => {
+    if (isBooking) return; // Prevent multiple clicks
+    setIsBooking(true);
+
+    if (!startTime || !endTime || !purpose || !staffName || !sessionPassword) {
+      alert("Please fill in all fields, including session password.");
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
       setIsBooking(false);
       return;
     }
@@ -84,6 +117,7 @@ const HallStatus = () => {
       setIsBooking(false);
       return;
     }
+<<<<<<< HEAD
   
     try {
       // Run a transaction to ensure booking happens atomically
@@ -129,6 +163,56 @@ const HallStatus = () => {
       setExistingBookings((prev) => [
         ...prev,
         { startTime, endTime, purpose, staffName, department, bookedBy: user.email, password },
+=======
+
+    try {
+      // Step 1: Create a temporary lock
+      const lockRef = await addDoc(collection(db, "booking_locks"), {
+        department,
+        startTime,
+        endTime,
+        staffName,
+        createdAt: new Date(),
+      });
+
+      // Step 2: Fetch existing bookings and check for conflicts
+      const q = query(collection(db, "bookings"), where("department", "==", department));
+      const querySnapshot = await getDocs(q);
+
+      const hasConflict = querySnapshot.docs.some((doc) => {
+        const booking = doc.data();
+        const existingStart = new Date(booking.startTime);
+        const existingEnd = new Date(booking.endTime);
+
+        return (startDateTime < existingEnd && endDateTime > existingStart);
+      });
+
+      if (hasConflict) {
+        await deleteDoc(doc(db, "booking_locks", lockRef.id));
+        alert("The seminar hall is already booked during this time.");
+        setIsBooking(false);
+        return;
+      }
+
+      // Step 4: If no conflict, proceed with booking
+      const docRef = await addDoc(collection(db, "bookings"), {
+        department,
+        startTime,
+        endTime,
+        purpose,
+        staffName,
+        bookedBy: user.email,
+        sessionPassword,
+      });
+
+      // Step 5: Remove the lock after successful booking
+      await deleteDoc(doc(db, "booking_locks", lockRef.id));
+
+      // Update existing bookings
+      setExistingBookings((prev) => [
+        ...prev,
+        { id: docRef.id, startTime, endTime, purpose, staffName, department, bookedBy: user.email, sessionPassword },
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
       ]);
   
       // Clear input fields
@@ -136,20 +220,32 @@ const HallStatus = () => {
       setEndTime("");
       setPurpose("");
       setStaffName("");
+<<<<<<< HEAD
       setPassword(""); // Clear password field
   
     } catch (error) {
       alert(error.message || "Error booking the seminar hall.");
       console.error("Error adding booking: ", error);
+=======
+      setSessionPassword("");
+
+    } catch (error) {
+      alert("Error processing booking: " + error.message);
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
     } finally {
       setIsBooking(false); // Re-enable the button after the process
     }
   };
   
 
-  const handleCancelBooking = async (bookingId, bookingPassword) => {
-    const enteredPassword = prompt("Enter the password to cancel this booking:"); // Ask for password input
+  const handleCancelBooking = async (id, sessionPasswordInput) => {
+    const booking = existingBookings.find((b) => b.id === id);
+    if (booking.sessionPassword !== sessionPasswordInput) {
+      alert("Incorrect session password.");
+      return;
+    }
 
+<<<<<<< HEAD
     if (enteredPassword === bookingPassword) { // Match the entered password with the booking's password
       try {
         await deleteDoc(doc(db, "bookings", bookingId));
@@ -160,84 +256,57 @@ const HallStatus = () => {
       }
     } else {
       alert("Incorrect password. Unable to cancel the booking.");
+=======
+    try {
+      await deleteDoc(doc(db, "bookings", id));
+      setExistingBookings((prev) => prev.filter((b) => b.id !== id));
+    } catch (error) {
+      alert("Error cancelling booking: " + error.message);
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
     }
   };
 
-  const handleLogout = () => {
-    signOut(auth);
-  };
-
   return (
-    <div className="hall-status-container">
-      <h2>Seminar Hall Status for {department}</h2>
+    <div className="hall-status">
+      <h2>Seminar Hall Booking for {department}</h2>
 
-      <div>
-        <h3>Book the Seminar Hall</h3>
-        <label>
-          Start Time:
-          <input
-            type="datetime-local"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
-          End Time:
-          <input
-            type="datetime-local"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
-          Purpose:
-          <input
-            type="text"
-            value={purpose}
-            onChange={(e) => setPurpose(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
-          Staff Name:
-          <input
-            type="text"
-            value={staffName}
-            onChange={(e) => setStaffName(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
-          Give A Secret Key:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
+      <div className="booking-form">
+        <input
+          type="datetime-local"
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
+          placeholder="Start Time"
+        />
+        <input
+          type="datetime-local"
+          value={endTime}
+          onChange={(e) => setEndTime(e.target.value)}
+          placeholder="End Time"
+        />
+        <input
+          type="text"
+          value={purpose}
+          onChange={(e) => setPurpose(e.target.value)}
+          placeholder="Purpose"
+        />
+        <input
+          type="text"
+          value={staffName}
+          onChange={(e) => setStaffName(e.target.value)}
+          placeholder="Staff Name"
+        />
+        <input
+          type="password"
+          value={sessionPassword}
+          onChange={(e) => setSessionPassword(e.target.value)}
+          placeholder="Session Password"
+        />
         <button onClick={handleBooking} disabled={isBooking}>
-          {isBooking ? "Booking..." : "Book Hall"}
+          {isBooking ? "Booking..." : "Book Seminar Hall"}
         </button>
       </div>
 
+<<<<<<< HEAD
       {existingBookings.length > 0 && (
   <div className="bookings-container">
     <h3>Existing Bookings</h3>
@@ -271,6 +340,54 @@ const HallStatus = () => {
 )}
 
       <button onClick={handleLogout}>Logout</button>
+=======
+      <div className="existing-bookings">
+        <h3>Existing Bookings</h3>
+        {existingBookings.length === 0 ? (
+          <p>No bookings available.</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Purpose</th>
+                <th>Staff Name</th>
+                <th>Booked By</th>
+                <th>Cancel</th>
+              </tr>
+            </thead>
+            <tbody>
+              {existingBookings.map((booking) => (
+                <tr key={booking.id}>
+                  <td>{new Date(booking.startTime).toLocaleString()}</td>
+                  <td>{new Date(booking.endTime).toLocaleString()}</td>
+                  <td>{booking.purpose}</td>
+                  <td>{booking.staffName}</td>
+                  <td>{booking.bookedBy}</td>
+                  <td>
+                    {booking.bookedBy === user.email ? (
+                      <button
+                        onClick={() => {
+                          const sessionPasswordInput = prompt(
+                            "Enter session password to cancel booking:"
+                          );
+                          handleCancelBooking(booking.id, sessionPasswordInput);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    ) : (
+                      "Not allowed"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+>>>>>>> cfb4f498972e867945918905de532b106db5dbe8
     </div>
   );
 };
