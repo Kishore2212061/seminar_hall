@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "./firebase"; // Assumed Firebase is initialized in this file
+import { db } from "./firebase.js"; // Assumed Firebase is initialized in this file
 import {
   collection,
   query,
