@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "./firebase.js"; // Assumed Firebase is initialized in this file
+import { db } from "../firebase.js"; // Assumed Firebase is initialized in this file
 import {
   collection,
   query,
@@ -9,7 +9,6 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import "./HallStatus.css"; // Assumed CSS file for styling
 
 const HallStatus = ({ department, user }) => {
   const [startTime, setStartTime] = useState("");
