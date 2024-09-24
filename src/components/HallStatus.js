@@ -146,6 +146,7 @@ const HallStatus = () => {
     }
   };
   
+  
   const handleCancelBooking = async (bookingId, bookingPassword) => {
     const enteredPassword = prompt("Enter the password to cancel this booking:"); // Ask for password input
 
