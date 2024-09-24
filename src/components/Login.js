@@ -4,34 +4,51 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import logo from "../assests/Logo.jpeg";
 import "../styles/Auth.css";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email.");
+      return;
+    }
+    if (password.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    setLoading(true); // Show loading state
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/hall-status");
     } catch (error) {
-      alert("Invalid Password.");
+      alert("Invalid credentials.");
       console.error(error);
+    } finally {
+      setLoading(false); // Hide loading state
     }
   };
 
   return (
     <div className="auth-container">
-      
-          <img 
-          src={logo}
-          alt="Image 2" 
-          style={{ 
-            height: 'auto', // Maintain original height
-            width: 'auto',  // Maintain original width
-            maxWidth: '100%', // Responsive
-            marginTop: '20px', // Increased space between images
-          }} />
+      <img 
+        src={logo}
+        alt="Logo"
+        style={{
+          height: 'auto',
+          width: 'auto',
+          maxWidth: '100%',
+          marginTop: '20px',
+        }}
+      />
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
@@ -48,7 +65,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

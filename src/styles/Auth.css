@@ -61,6 +61,7 @@ body {
   margin: 10px 0;
   font-size: 0.9rem;
   text-align: center;
+  background-color: #239dfa;
 }
 
 .bookings-table th,
@@ -70,15 +71,16 @@ body {
 }
 
 .bookings-table th {
-  background-color: #235CFA;
+  background-color: #2367fa;
   color: white;
 }
 
 .bookings-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color:  #2387fa;
 }
 
 .bookings-table td {
+  color:white;
   word-wrap: break-word; /* Ensure text wraps within the cell */
   max-width: 200px; /* Optional: Prevent long text from making cells too wide */
 }
