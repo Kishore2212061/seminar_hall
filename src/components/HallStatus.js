@@ -92,6 +92,7 @@ const HallStatus = () => {
         const querySnapshot = await getDocs(q);
   
         let hasConflict = false;
+        let conflictingBookingId = null;
   
         querySnapshot.forEach((doc) => {
           const bookingData = doc.data();
@@ -104,14 +105,24 @@ const HallStatus = () => {
             (startDateTime.getTime() === existingStart.getTime() && endDateTime.getTime() === existingEnd.getTime()) // Exact second match
           ) {
             hasConflict = true; // Conflict found
+            conflictingBookingId = doc.id; // Store the ID of the conflicting booking
           }
         });
   
         if (hasConflict) {
-          throw new Error("The seminar hall is already booked during this time.");
+          // If conflict exists, ask the user if they want to cancel the existing booking
+          const shouldCancel = window.confirm("The seminar hall is already booked during this time. Do you want to cancel the existing booking?");
+          
+          if (shouldCancel) {
+            // Cancel the conflicting booking before adding the new one
+            await deleteDoc(doc(db, "bookings", conflictingBookingId));
+            alert("Conflicting booking was cancelled.");
+          } else {
+            throw new Error("The seminar hall is already booked during this time.");
+          }
         }
   
-        // If no conflict, proceed with booking
+        // If no conflict or conflict was resolved, proceed with booking
         await transaction.set(doc(collection(db, "bookings")), {
           department,
           startTime,
@@ -147,8 +158,9 @@ const HallStatus = () => {
   };
   
   
+  
   const handleCancelBooking = async (bookingId, bookingPassword) => {
-    const enteredPassword = prompt("Enter the password to cancel this booking:"); // Ask for password input
+    const enteredPassword = prompt("Enter the Session Idto cancel this booking:"); // Ask for password input
 
     if (enteredPassword === bookingPassword) { // Match the entered password with the booking's password
       try {
@@ -159,7 +171,7 @@ const HallStatus = () => {
         console.error("Error cancelling booking: ", error);
       }
     } else {
-      alert("Incorrect password. Unable to cancel the booking.");
+      alert("Incorrect Session Id. Unable to cancel the booking.");
     }
   };
 
@@ -222,7 +234,7 @@ const HallStatus = () => {
           />
         </label>
         <label>
-          Give A Secret Key:
+          Session Id:
           <input
             type="password"
             value={password}
