@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { collection, query, where, getDocs, deleteDoc, doc, runTransaction } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import "../styles/Auth.css";
 
@@ -9,8 +9,10 @@ const HallStatus = () => {
   const [endTime, setEndTime] = useState("");
   const [purpose, setPurpose] = useState("");
   const [staffName, setStaffName] = useState("");
+  const [sessionPassword, setSessionPassword] = useState("");
   const [existingBookings, setExistingBookings] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
+  const [enteredSessionPassword, setEnteredSessionPassword] = useState("");
   const user = auth.currentUser;
   const department = user.email.slice(0, 3).toUpperCase();
 
@@ -32,32 +34,36 @@ const HallStatus = () => {
         const bookingData = { id: doc.id, ...doc.data() };
         const bookingEndTime = new Date(bookingData.endTime);
   
+        // If the end time is before the current time, mark as expired
         if (bookingEndTime < currentTime) {
-          expiredBookings.push(doc.id);
+          expiredBookings.push(doc.id); // Add to expired list
         } else {
-          validBookings.push(bookingData);
+          validBookings.push(bookingData); // Add to valid bookings list
         }
       });
   
+      // Delete expired bookings
       for (const bookingId of expiredBookings) {
         await deleteDoc(doc(db, "bookings", bookingId));
       }
   
+      // Update state with only valid bookings
       setExistingBookings(validBookings);
     };
   
     fetchBookings();
   
+    // Set interval to automatically check every 5 minutes
     const interval = setInterval(fetchBookings, 5 * 60 * 1000); // 5 minutes
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup on component unmount
   }, [department]);
 
   const handleBooking = async () => {
-    if (isBooking) return; // Prevent multiple clicks
+    if (isBooking) return; // Prevent further clicks while booking
     setIsBooking(true); // Disable the button
 
-    if (!startTime || !endTime || !purpose || !staffName) {
-      alert("Please fill in all fields.");
+    if (!startTime || !endTime || !purpose || !staffName || !sessionPassword) {
+      alert("Please fill in all fields, including session password.");
       setIsBooking(false);
       return;
     }
@@ -77,60 +83,63 @@ const HallStatus = () => {
       return;
     }
 
+    const hasConflict = existingBookings.some((booking) => {
+      const existingStart = new Date(booking.startTime);
+      const existingEnd = new Date(booking.endTime);
+      return (startDateTime < existingEnd && endDateTime > existingStart);
+    });
+
+    if (hasConflict) {
+      alert("The seminar hall is already booked during this time.");
+      setIsBooking(false);
+      return;
+    }
+
     try {
-      // Firestore Transaction to handle simultaneous booking
-      await runTransaction(db, async (transaction) => {
-        const q = query(collection(db, "bookings"), where("department", "==", department));
-        const querySnapshot = await getDocs(q);
-
-        const hasConflict = querySnapshot.docs.some((doc) => {
-          const existingBooking = doc.data();
-          const existingStart = new Date(existingBooking.startTime);
-          const existingEnd = new Date(existingBooking.endTime);
-          return (startDateTime < existingEnd && endDateTime > existingStart);
-        });
-
-        if (hasConflict) {
-          throw new Error("The seminar hall is already booked during this time.");
-        }
-
-        // If no conflict, proceed with the booking
-        await transaction.set(doc(collection(db, "bookings")), {
-          department,
-          startTime: startDateTime.toISOString(),
-          endTime: endDateTime.toISOString(),
-          purpose,
-          staffName,
-          bookedBy: user.email,
-        });
+      const docRef = await addDoc(collection(db, "bookings"), {
+        department,
+        startTime,
+        endTime,
+        purpose,
+        staffName,
+        bookedBy: user.email,
+        sessionPassword, // Store session password
       });
 
-      alert("Booking successful!");
-      
+      console.log("Booking added with ID: ", docRef.id);
+
       setExistingBookings((prev) => [
         ...prev,
-        { startTime, endTime, purpose, staffName, department, bookedBy: user.email },
+        { id: docRef.id, startTime, endTime, purpose, staffName, department, bookedBy: user.email, sessionPassword },
       ]);
 
+      // Clear input fields
       setStartTime("");
       setEndTime("");
       setPurpose("");
       setStaffName("");
+      setSessionPassword("");
+
     } catch (error) {
-      alert(error.message || "Error booking the seminar hall.");
-      console.error("Error during booking:", error);
+      console.error("Error adding booking: ", error);
     } finally {
       setIsBooking(false); // Re-enable the button after the process
     }
   };
 
-  const handleCancelBooking = async (bookingId) => {
-    try {
-      await deleteDoc(doc(db, "bookings", bookingId));
-      setExistingBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
-      console.log("Booking cancelled");
-    } catch (error) {
-      console.error("Error cancelling booking: ", error);
+  const handleCancelBooking = async (bookingId, bookingSessionPassword) => {
+    const enteredPassword = prompt("Enter session password to cancel the booking:");
+    
+    if (enteredPassword === bookingSessionPassword) {
+      try {
+        await deleteDoc(doc(db, "bookings", bookingId));
+        setExistingBookings((prev) => prev.filter((booking) => booking.id !== bookingId));
+        console.log("Booking cancelled");
+      } catch (error) {
+        console.error("Error cancelling booking: ", error);
+      }
+    } else {
+      alert("Incorrect session password. Booking cannot be canceled.");
     }
   };
 
@@ -192,6 +201,18 @@ const HallStatus = () => {
             }}
           />
         </label>
+        <label>
+          Session Password:
+          <input
+            type="password"
+            value={sessionPassword}
+            onChange={(e) => setSessionPassword(e.target.value)}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+            }}
+          />
+        </label>
         <button onClick={handleBooking} disabled={isBooking}>
           {isBooking ? "Booking..." : "Book Hall"}
         </button>
@@ -219,7 +240,9 @@ const HallStatus = () => {
                     <td>{booking.purpose}</td>
                     <td>{booking.staffName}</td>
                     <td>
-                      <button onClick={() => handleCancelBooking(booking.id)}>Cancel</button>
+                      <button onClick={() => handleCancelBooking(booking.id, booking.sessionPassword)}>
+                        Cancel
+                      </button>
                     </td>
                   </tr>
                 ))}
