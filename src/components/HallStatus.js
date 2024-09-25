@@ -155,7 +155,7 @@ const HallStatus = () => {
   
   
   const handleCancelBooking = async (bookingId, bookingPassword) => {
-    const enteredPassword = prompt("Enter the password to cancel this booking:"); // Ask for password input
+    const enteredPassword = prompt("Enter the Session Id to cancel this booking:"); // Ask for password input
 
     if (enteredPassword === bookingPassword) { // Match the entered password with the booking's password
       try {
@@ -166,7 +166,7 @@ const HallStatus = () => {
         console.error("Error cancelling booking: ", error);
       }
     } else {
-      alert("Incorrect password. Unable to cancel the booking.");
+      alert("Incorrect Session Id. Unable to cancel the booking.");
     }
   };
 
@@ -229,7 +229,7 @@ const HallStatus = () => {
           />
         </label>
         <label>
-          Give A Secret Key:
+          Session Id:
           <input
             type="password"
             value={password}
