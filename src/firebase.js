@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+import { getStorage } from 'firebase/storage';
 // Firebase configuration using environment variables
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -19,5 +19,7 @@ const app = initializeApp(firebaseConfig);
 // Export Firebase Authentication and Firestore
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
+storage.maxUploadRetryTime = 100000; 
+export { auth, db, storage }; 
 
-export { auth, db };
