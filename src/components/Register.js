@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import logo from "../assests/Logo.jpeg";
+import logo from "../assests/Logo.jpeg"; // Corrected path
 import { useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
@@ -38,15 +38,21 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/hall-status");
+      navigate("/hall-status"); // Redirect to hall status on successful registration
     } catch (error) {
       let errorMessage = "An error occurred. Please try again.";
-      if (error.code === "auth/email-already-in-use") {
-        errorMessage = "The email address is already in use.";
-      } else if (error.code === "auth/invalid-email") {
-        errorMessage = "The email address is not valid.";
-      } else if (error.code === "auth/weak-password") {
-        errorMessage = "The password is too weak.";
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "The email address is already in use.";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "The email address is not valid.";
+          break;
+        case "auth/weak-password":
+          errorMessage = "The password is too weak.";
+          break;
+        default:
+          errorMessage = "An unexpected error occurred. Please try again.";
       }
       alert(errorMessage);
       console.error(error);

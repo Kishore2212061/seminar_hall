@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../firebase"; // Ensure this path is correct
 import { useNavigate } from "react-router-dom";
-import logo from "../assests/Logo.jpeg";
+import logo from "../assests/Logo.jpeg"; // Ensure the path is correct
+import { useAuth } from "../context/authContext"; // Ensure this path is correct
 import "../styles/Auth.css";
 
 const Login = () => {
@@ -10,6 +11,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { user } = useAuth(); // Use the useAuth hook
+
+  // Redirect to Hall Status if user is already logged in
+  useEffect(() => {
+    if (user) {
+      navigate("/hall-status");
+    }
+  }, [user, navigate]);
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 

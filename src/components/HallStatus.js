@@ -8,6 +8,8 @@ import html2canvas from 'html2canvas';
 import "jspdf-autotable"; // Ensure to install this package
 import "../styles/Auth.css";
 import { storage } from '../firebase.js';
+import { useNavigate } from 'react-router-dom';
+
 const HallStatus = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -17,7 +19,7 @@ const HallStatus = () => {
   const [existingBookings, setExistingBookings] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
-
+  const navigate = useNavigate();
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
   };
@@ -29,7 +31,7 @@ const HallStatus = () => {
   const convertToIST = (date) => {
     return new Date(date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
   };
-
+  
   useEffect(() => {
     const fetchBookings = async () => {
       const bookingsRef = collection(db, "bookings");
@@ -79,6 +81,8 @@ const HallStatus = () => {
     fetchBookings();
 
   }, [department]);
+
+
 
   const handleBooking = async () => {
     if (isBooking) return; // Prevent further clicks while booking
@@ -269,9 +273,15 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
   
   
 
-  const handleLogout = () => {
-    signOut(auth);
-  };
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Redirect to login page after logout
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
+  }
 
   return (
     <div className="hall-status-container">
@@ -347,7 +357,8 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
 {existingBookings.length > 0 ? (
   <div>
     <h3>Existing Bookings</h3>
-    <table className="bookings-table" style={{ borderCollapse: "collapse", width: "100%" }}>
+    <div className="bookings-table">
+    <table className="bookings-container" style={{ borderCollapse: "collapse", width: "100%" }}>
       <thead>
         <tr>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>Start Time</th>
@@ -375,6 +386,7 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
         ))}
       </tbody>
     </table>
+    </div>
   </div>
 ) : (
   <p>No existing bookings available.</p>
@@ -387,8 +399,10 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
           <input type="date" value={selectedDate} onChange={handleDateChange} />
         </label>
         <button onClick={generateReport}>Generate Report
-      </button>      </div>
-    </div>
+      </button>  
+      <button class="logout-btn" onClick={handleLogout}>Logout</button>    
+      </div>
+  </div>
   );
 };
 

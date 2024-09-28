@@ -1,6 +1,7 @@
+/* Base Styles */
 body {
   background-color: #f8f9fa;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -16,47 +17,49 @@ body {
 
 /* Auth Container Styles (Login and Register) */
 .auth-container {
-  background-color: #235CFA;
+  background: linear-gradient(145deg, #1d4ed8, #3b82f6); /* Gradient background */
   margin: 40px;
-  padding: 2rem; /* Reduced padding for better spacing on mobile */
-  border-radius: 20px; /* Adjusted radius for smaller screens */
+  padding: 2rem;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
-  border: 8px solid;
+  border: 4px solid #82aaff; /* Light blue border */
+  color: white; /* Ensure high contrast */
 }
 
 .auth-container h2 {
   margin-bottom: 1px;
-  font-size: 1.75rem; /* Reduced font size for mobile view */
+  font-size: 2rem; /* Increased font size for better emphasis */
+  font-weight: 700; /* Bold heading */
+  letter-spacing: 1.2px;
   color: #fff;
 }
 
 /* Hall Status Container Styles */
 .hall-status-container {
-  /* background-color: #ffffff; */
+  background: linear-gradient(145deg, #1d4ed8, #3b82f6);
   margin: 20px;
-  padding: 3rem; /* Reduced padding */
-  border-radius: 20px; /* Adjusted for mobile */
+  padding: 3rem;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
-  border: 10px solid black;
+  border: 4px solid #82aaff;
   color: black;
 }
 
 /* Ensure the table is wrapped in a responsive container */
-/* Ensure the table is wrapped in a responsive container */
-.bookings-container{
-  width: 100%; /* Ensure the wrapper takes the full width */
-  max-width: 100%; /* Prevent overflow */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  margin: 0 auto; /* Center the wrapper */
-  white-space: nowrap; /* Prevent wrapping of table content */
+.bookings-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+  white-space: nowrap;
 }
 
 /* Table Styling */
 .bookings-table {
-  width: 150%; /* Increase the width of the table */
-  max-width: 100%; /* Ensure it doesn't exceed the container */
+  width: 150%;
+  max-width: 100%;
   border-collapse: collapse;
   margin: 10px 0;
   font-size: 0.9rem;
@@ -76,28 +79,29 @@ body {
 }
 
 .bookings-table tr:nth-child(even) {
-  background-color:  #2387fa;
+  background-color: #2387fa;
 }
 
 .bookings-table td {
-  color:white;
-  word-wrap: break-word; /* Ensure text wraps within the cell */
-  max-width: 200px; /* Optional: Prevent long text from making cells too wide */
+  color: white;
+  word-wrap: break-word;
+  max-width: 200px;
 }
 
 /* Responsive Styles for small screens */
 @media (min-width: 100px) and (max-width: 768px) {
   .bookings-container {
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: auto;
   }
 
   .bookings-table {
-    font-size: 0.5rem; /* Slightly smaller text on mobile */
-    width: 100%; /* Ensure table stays within the screen */
+    overflow-x: auto;
+    font-size: 0.5rem;
+    width: 100%;
   }
 
   .bookings-table td {
-    max-width: 100px; /* Constrain cell width further on small screens */
+    max-width: 100px;
   }
 }
 
@@ -107,19 +111,39 @@ button, input {
   padding: 8px;
   margin: 8px 0;
   border-radius: 5px;
+  font-weight: 600;
 }
 
 button {
-  background-color: #235CFA;
+  background: linear-gradient(145deg, #235CFA, #82aaff); /* Gradient on button */
   color: white;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s; /* Transition for hover effects */
 }
 
 button:hover {
-  background-color: black;
+  background: linear-gradient(145deg, #111, #444); /* Darker on hover */
+  transform: scale(1.02); /* Slightly enlarge on hover */
 }
+/* Logout Button Styles */
+button.logout-btn {
+  width: auto;
+  padding: 10px 20px;
+  background-color: #d9534f; /* Red color for logout */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px; /* Add space above the button */
+  transition: background-color 0.3s ease-in-out, transform 0.2s; /* Smooth hover effects */
+}
+
+button.logout-btn:hover {
+  background-color: #c9302c; /* Darker red on hover */
+  transform: scale(1.05); /* Slight scale on hover */
+}
+
 
 /* Navbar Styles */
 .navbar {
@@ -155,34 +179,33 @@ footer {
   background-color: #343a40;
   color: #ffffff;
   text-align: center;
-  padding: 15px; /* Adjusted for mobile view */
+  padding: 15px;
 }
 
-/* Responsive Styles */
-/* Styles for screens between 100px and 768px */
-@media (min-width: 100px) and (max-width: 768px) {
 
+/* Responsive Styles */
+@media (min-width: 100px) and (max-width: 768px) {
   .auth-container, .hall-status-container {
     max-width: 220px;
-    padding: 1.5rem; /* Reduced padding for small screens */
-    margin: 10px;  /* Adjusted margin for small screens */
+    padding: 1.5rem;
+    margin: 10px;
   }
 
   .auth-container h2 {
-    font-size: 1.25rem; /* Adjusted heading size */
+    font-size: 1.25rem;
   }
 
   button, input {
-    padding: 6px; /* Further reduced padding */
-    font-size: 0.85rem; /* Adjusted font size */
+    padding: 6px;
+    font-size: 0.85rem;
   }
 
   nav ul li {
     display: block;
-    margin-bottom: 10px; /* Stack navbar items vertically */
+    margin-bottom: 10px;
   }
 
   nav ul li a {
-    font-size: 20px; /* Adjusted navbar font size */
+    font-size: 20px;
   }
 }
