@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc, runTransaction } from "firebase/firestore";
+import {onSnapshot, collection, addDoc, query, where, getDocs, deleteDoc, doc, runTransaction } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import { jsPDF } from "jspdf";
@@ -32,54 +32,54 @@ const HallStatus = () => {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const q = query(collection(db, "bookings"), where("department", "==", department));
-      const querySnapshot = await getDocs(q);
+      const bookingsRef = collection(db, "bookings");
+      const q = query(bookingsRef, where("department", "==", department));
+
       const currentTime = new Date();
-    
       const validBookings = [];
-    
-      // Process each document in the querySnapshot
-      querySnapshot.forEach(async (docSnapshot) => {
-        const bookingData = { id: docSnapshot.id, ...docSnapshot.data() };
-        const bookingEndTime = new Date(bookingData.endTime);
-    
-        // If booking has finished and is still marked as active, update status
-        if (bookingEndTime < currentTime && bookingData.status === "active") {
-          try {
-            const bookingRef = doc(db, "bookings", docSnapshot.id);
-            await runTransaction(db, async (transaction) => {
-              transaction.update(bookingRef, { status: "finished" });
-            });
-            bookingData.status = "finished"; // Update the local booking data
-          } catch (error) {
-            console.error("Transaction failed: ", error);
+
+      const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+        const newValidBookings = [];
+
+        // Process each document in the querySnapshot
+        querySnapshot.forEach(async (docSnapshot) => {
+          const bookingData = { id: docSnapshot.id, ...docSnapshot.data() };
+          const bookingEndTime = new Date(bookingData.endTime);
+
+          // If the booking has finished and is still marked as active, update status
+          if (bookingEndTime < currentTime && bookingData.status === "active") {
+            try {
+              const bookingRef = doc(db, "bookings", docSnapshot.id);
+              await runTransaction(db, async (transaction) => {
+                transaction.update(bookingRef, { status: "finished" });
+              });
+              bookingData.status = "finished"; // Update the local booking data
+            } catch (error) {
+              console.error("Transaction failed: ", error);
+            }
           }
-        }
-    
-        // Only add bookings that have not finished yet
-        if (bookingEndTime >= currentTime || bookingData.status === "active") {
-          validBookings.push(bookingData);
-        }
+
+          // Only add bookings that are ongoing or upcoming
+          if (bookingEndTime >= currentTime || bookingData.status === "active") {
+            newValidBookings.push(bookingData);
+          }
+        });
+
+        // Sort the valid bookings by start time
+        newValidBookings.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+
+        // Update the state with valid bookings
+        setExistingBookings(newValidBookings);
       });
-    
-      // Sort valid bookings by start time
-      validBookings.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-    
-      // Update state with valid bookings (ongoing or upcoming)
-      setExistingBookings(validBookings);
+
+      // Cleanup the subscription when the component unmounts
+      return () => unsubscribe();
     };
-    
-    // Call fetchBookings initially and then set interval to refresh every 5 minutes
+
     fetchBookings();
-    
-    const interval = setInterval(fetchBookings, 5 * 60 * 1000); // 5-minute interval
-    
-    // Cleanup the interval when component unmounts
-    return () => clearInterval(interval);
-  
+
   }, [department]);
-  
-  
+
   const handleBooking = async () => {
     if (isBooking) return; // Prevent further clicks while booking
     setIsBooking(true); // Disable the button
@@ -181,34 +181,29 @@ const HallStatus = () => {
     }
   };
   
-  const handleCancelBooking = async (bookingId, bookingPassword) => {
-    const enteredPassword = prompt("Enter the Session Id to cancel this booking:");
-  
-    if (enteredPassword === bookingPassword) {
-      try {
-        // Delete booking from Firestore
-        const bookingDocRef = doc(db, "bookings", bookingId);
-        await deleteDoc(bookingDocRef);
-  
-        // Update local state to remove the booking from the list
-        setExistingBookings((prevBookings) =>
-          prevBookings.filter((booking) => booking.id !== bookingId)
-        );
-  
-        alert("Booking cancelled successfully");
-  
-      } catch (error) {
-        console.error("Error cancelling booking: ", error);
-      }
-    } else {
-      alert("Incorrect Session Id. Unable to cancel the booking.");
+const handleCancelBooking = async (bookingId, bookingPassword) => {
+  const enteredPassword = prompt("Enter the Session Id to cancel this booking:");
+
+  if (enteredPassword === bookingPassword) {
+    try {
+      // Delete booking from Firestore
+      const bookingDocRef = doc(db, "bookings", bookingId);
+      await deleteDoc(bookingDocRef);
+
+      // No need to update local state manually since Firestore's onSnapshot will handle it
+      alert("Booking cancelled successfully");
+
+    } catch (error) {
+      console.error("Error cancelling booking: ", error);
     }
-  };
-  
+  } else {
+    alert("Incorrect Session Id. Unable to cancel the booking.");
+  }
+};
+
   
   // Function to generate the PDF report
   const generateReport = async () => {
-  
     if (!selectedDate) {
       alert("Please select a date");
       return;
@@ -224,7 +219,6 @@ const HallStatus = () => {
     const q = query(
       collection(db, "bookings"),
       where("department", "==", department),
-  
     );
   
     const querySnapshot = await getDocs(q);
@@ -253,39 +247,25 @@ const HallStatus = () => {
     const tableColumn = ['Start Time', 'End Time', 'Purpose', 'Staff Name', 'Status'];
     const tableRows = [];
   
-    // Populate the rows with booking data
+    // Add data to the rows
     filteredBookings.forEach(booking => {
-      const bookingRow = [
+      const bookingData = [
         convertToIST(booking.startTime),
         convertToIST(booking.endTime),
         booking.purpose,
         booking.staffName,
-        booking.status
+        booking.status,
       ];
-      tableRows.push(bookingRow);
+      tableRows.push(bookingData);
     });
   
-    // Generate the table in the PDF
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 20, // Starting point for the table
-    });
+    // Add the table to the PDF
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
   
     // Save the PDF
-    const pdfFileName = `Booking_Report_${department}_${selectedDate}.pdf`;
-    doc.save(pdfFileName);
-  
-    // Upload the PDF to Firebase Storage
-    const pdfBlob = doc.output('blob'); // Convert PDF to blob
-    const pdfRef = ref(storage, `reports/${pdfFileName}`); // Reference to storage location
-    
-    await uploadBytes(pdfRef, pdfBlob).then((snapshot) => {
-      console.log('Uploaded PDF to storage:', snapshot);
-  
-    });
-    
+    doc.save(`seminar_hall_bookings_${selectedDate}.pdf`);
   };
+  
   
   
 
