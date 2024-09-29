@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "./context/authContext"; // Import AuthPro
 import Login from "./components/Login";
 import Register from "./components/Register";
 import HallStatus from "./components/HallStatus";
+import HallBooking from "./components/HallBooking"; // Import HallBooking
 import "./styles/Auth.css";
 import AppLayout from "./components/AppLayout";
 
@@ -26,7 +27,7 @@ const App = () => {
 
 // Navigation component to conditionally render links
 const Navigation = () => {
-  const { user, logout } = useAuth(); // Get user and logout function from context
+  const { user } = useAuth(); // Get user from context
 
   return (
     <nav className="navbar">
@@ -39,6 +40,7 @@ const Navigation = () => {
         ) : (
           <>
             <li><Link to="/hall-status" className="nav-link">Hall Status</Link></li>
+            <li><Link to="/hall-booking" className="nav-link">Booking Status</Link></li>
           </>
         )}
       </ul>
@@ -55,6 +57,7 @@ const AppRoutes = () => {
       <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-status" />} />
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-status" />} /> {/* Corrected route path */}
       <Route path="/hall-status" element={user ? <HallStatus /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
+      <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} /> {/* Use HallBooking component */}
     </RouterRoutes>
   );
 };

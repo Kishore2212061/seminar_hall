@@ -1,0 +1,70 @@
+/* Container for the entire booking system */
+.booking-container {
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: black; /* Set text color to black for the heading */
+}
+
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Each department's hall section */
+.hall-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    background-color: #f9f9f9;
+}
+
+.hall-section h2 {
+    color: black; /* Ensure hall section titles are black */
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+/* Table styling for time slots */
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.booking-table th,
+.booking-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    color: black; /* Set text color to black for table cells */
+}
+
+.booking-table th {
+    background-color: #f2f2f2;
+}
+
+.available {
+    background-color: #d4edda;
+    color: black; /* Change text color in available slots to black */
+}
+
+.booked {
+    background-color: #f8d7da;
+    color: black; /* Change text color in booked slots to black */
+}
+
+/* Styling for break rows */
+.break-row {
+    background-color: #fff3cd;
+    color: black; /* Set break row text color to black */
+    font-style: italic;
+}
