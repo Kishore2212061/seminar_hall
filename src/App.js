@@ -38,7 +38,7 @@ const Navigation = () => {
           </>
         ) : (
           <>
-            <li><Link to="/hall-booking" className="nav-link">VISUAL BOOKING[ADVANCED]</Link></li>
+            <li><Link to="/hall-booking" className="nav-link">VISUAL BOOKING</Link></li>
           </>
         )}
       </ul>
