@@ -9,6 +9,9 @@ import "jspdf-autotable"; // Ensure to install this package
 import "../styles/Auth.css";
 import { storage } from '../firebase.js';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './Login.js';
 
 const HallStatus = () => {
   const [startTime, setStartTime] = useState("");
@@ -20,12 +23,14 @@ const HallStatus = () => {
   const [isBooking, setIsBooking] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
+  const auth = getAuth();
+
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
   };
   
   const user = auth.currentUser;
-  const department = user.email.slice(0, 3).toUpperCase();
+  const department = user.email.split('@')[0].toUpperCase();
 
   // Convert time to Indian Standard Time (IST)
   const convertToIST = (date) => {
@@ -82,7 +87,32 @@ const HallStatus = () => {
 
   }, [department]);
 
+ 
 
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+  
+      // Handle the mobile back button (or browser back navigation)
+      window.onpopstate = function () {
+        // This event is triggered when the back button is pressed
+        signOut(auth)
+          .then(() => {
+          })
+          .catch((error) => {
+          });
+      };
+  
+      // Also handle when the user closes the browser window or tab
+      window.onbeforeunload = function () {
+        signOut(auth)
+          .then(() => {
+          })
+          .catch((error) => {
+          });
+      };
+    } else {
+    }
+  });
 
   const handleBooking = async () => {
     if (isBooking) return; // Prevent further clicks while booking
