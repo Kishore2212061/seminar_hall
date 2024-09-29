@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../firebase'; // Import your Firebase configuration
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import '../styles/HallBooking.css';
+import HallStatus from './HallStatus';
+import { getAuth } from "firebase/auth";
 
 // List of seminar halls (departments)
 const seminarHalls = [
@@ -14,7 +16,6 @@ const seminarHalls = [
   { id: 7, name: 'CIVIL' },
 ];
 
-// List of time slots (including breaks and lunch)
 const timeSlots = [
   { id: 1, time: '9:15 AM - 10:05 AM', start: '09:15', end: '10:05' },
   { id: 2, time: '10:05 AM - 10:55 AM', start: '10:05', end: '10:55' },
@@ -29,6 +30,13 @@ const timeSlots = [
 
 const HallBooking = () => {
   const [bookings, setBookings] = useState({});
+  const [selectedStartTime, setStartTime] = useState('');
+  const [selectedEndTime, setEndTime] = useState('');
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  // Check if user is authenticated before accessing email
+  const loggedInDepartment = user ? user.email.split('@')[0].toUpperCase() : 'CSE'; // Use default if user is not defined
 
   useEffect(() => {
     const fetchBookings = () => {
@@ -40,28 +48,24 @@ const HallBooking = () => {
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          const departmentName = data.department; // Assuming department name is stored in the booking
+          const departmentName = data.department;
           const startTime = new Date(data.startTime).toISOString();
           const endTime = new Date(data.endTime).toISOString();
 
-          // Get today's date in YYYY-MM-DD format
           const today = new Date().toISOString().split('T')[0];
-
-          // Construct the full date-time strings for comparison
           const fullStartTime = new Date(`${today}T${data.startTime.split('T')[1]}`);
           const fullEndTime = new Date(`${today}T${data.endTime.split('T')[1]}`);
 
-          // Find the corresponding time slot
           const bookedSlots = timeSlots.filter((slot) => {
             return (
               fullStartTime >= new Date(`${today}T${slot.start}:00`) &&
               fullEndTime <= new Date(`${today}T${slot.end}:00`) && 
-              slot.isBreak !== true // Ensure we don't include breaks
+              slot.isBreak !== true 
             );
           });
 
           if (bookedSlots.length > 0) {
-            const hallId = seminarHalls.find(hall => hall.name === departmentName)?.id; // Find the hall ID by department name
+            const hallId = seminarHalls.find(hall => hall.name === departmentName)?.id;
             if (hallId) {
               if (!newBookings[hallId]) {
                 newBookings[hallId] = [];
@@ -74,18 +78,23 @@ const HallBooking = () => {
         setBookings(newBookings);
       });
 
-      // Cleanup the subscription when the component unmounts
       return () => unsubscribe();
     };
 
     fetchBookings();
   }, []);
 
+  const handleSlotClick = (slot) => {
+    const today = new Date().toISOString().split('T')[0];
+    setStartTime(`${today}T${slot.start}`);
+    setEndTime(`${today}T${slot.end}`);
+  };
+
   return (
     <div className="booking-container">
       <h1>Seminar Hall Booking</h1>
       <div className="grid-container">
-        {seminarHalls.map((hall) => (
+        {seminarHalls.filter(hall => hall.name === loggedInDepartment).map((hall) => (
           <div key={hall.id} className="hall-section">
             <h2>{hall.name}</h2>
             <table className="booking-table">
@@ -98,11 +107,31 @@ const HallBooking = () => {
               <tbody>
                 {timeSlots.map((slot) => {
                   const isBooked = bookings[hall.id]?.includes(slot.id);
+                  const canBook = hall.name === loggedInDepartment;
+
                   return (
-                    <tr key={slot.id} className={slot.isBreak ? 'break-row' : ''}>
+                    <tr
+                      key={slot.id}
+                      className={slot.isBreak ? 'break-row' : ''}
+                      style={{
+                        cursor: isBooked || !canBook ? 'default' : 'pointer',
+                        backgroundColor: isBooked ? '#ffcccc' : canBook ? '#ccffcc' : '#ccc',
+                      }}
+                    >
                       <td>{slot.time}</td>
-                      <td className={isBooked ? 'booked' : 'available'}>
-                        {slot.isBreak ? 'Break' : isBooked ? 'Booked' : 'Available'}
+                      <td>
+                        {slot.isBreak ? (
+                          'Break'
+                        ) : isBooked ? (
+                          'Booked'
+                        ) : (
+                          <button 
+                            onClick={() => handleSlotClick(slot)} 
+                            className="book-button"
+                          >
+                            Book
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
@@ -112,6 +141,7 @@ const HallBooking = () => {
           </div>
         ))}
       </div>
+      <HallStatus selectedStartTime={selectedStartTime} selectedEndTime={selectedEndTime} />
     </div>
   );
 };

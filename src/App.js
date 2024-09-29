@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes as RouterRoutes, Navigate, Link 
 import { AuthProvider, useAuth } from "./context/authContext"; // Import AuthProvider
 import Login from "./components/Login";
 import Register from "./components/Register";
-import HallStatus from "./components/HallStatus";
 import HallBooking from "./components/HallBooking"; // Import HallBooking
 import "./styles/Auth.css";
 import AppLayout from "./components/AppLayout";
@@ -39,8 +38,7 @@ const Navigation = () => {
           </>
         ) : (
           <>
-            <li><Link to="/hall-status" className="nav-link">Hall Status</Link></li>
-            <li><Link to="/hall-booking" className="nav-link">Booking Status</Link></li>
+            <li><Link to="/hall-booking" className="nav-link">VISUAL BOOKING[ADVANCED]</Link></li>
           </>
         )}
       </ul>
@@ -54,11 +52,11 @@ const AppRoutes = () => {
 
   return (
     <RouterRoutes>
-      <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-status" />} />
-      <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-status" />} /> {/* Corrected route path */}
-      <Route path="/hall-status" element={user ? <HallStatus /> : <Navigate to="/login" />} /> {/* Redirect to login if not authenticated */}
-      <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} /> {/* Use HallBooking component */}
-    </RouterRoutes>
+    <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
+    <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
+    <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
+    <Route path="*" element={<Navigate to="/hall-booking" />} /> {/* Redirect all unmatched routes */}
+  </RouterRoutes>
   );
 };
 

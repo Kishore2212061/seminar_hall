@@ -13,7 +13,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login.js';
 
-const HallStatus = () => {
+const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [purpose, setPurpose] = useState("");
@@ -320,29 +320,29 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
       <div>
         <h3>Book the Seminar Hall</h3>
         <label>
-          Start Time:
-          <input
-            type="datetime-local"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
-          End Time:
-          <input
-            type="datetime-local"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
+        Start Time:
+        <input
+          type="datetime-local"
+          value={selectedStartTime}
+          onChange={(e) => setStartTime(e.target.value)}
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+          }}
+        />
+      </label>
+      <label>
+        End Time:
+        <input
+          type="datetime-local"
+          value={selectedEndTime}
+          onChange={(e) => setEndTime(e.target.value)}
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+          }}
+        />
+      </label>
         <label>
           Purpose:
           <input
