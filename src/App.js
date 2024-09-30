@@ -54,8 +54,8 @@ const AppRoutes = () => {
     <RouterRoutes>
     <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
     <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
+    <Route path="/hall-status" element={user ? <HallBooking /> : <Navigate to="/login" />} />
     <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
-    <Route path="*" element={<Navigate to="/hall-booking" />} /> {/* Redirect all unmatched routes */}
   </RouterRoutes>
   );
 };

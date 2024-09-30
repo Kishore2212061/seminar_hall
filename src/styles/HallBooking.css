@@ -1,5 +1,6 @@
 /* Container for the entire booking system */
 .booking-container {
+    
     text-align: center;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -20,11 +21,15 @@ h1 {
 
 /* Each department's hall section */
 .hall-section {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    width: 300px;
-    background-color: #f9f9f9;
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
+    margin: 20px;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    border: 4px solid #82aaff;
+    color: black;
+  
 }
 
 .hall-section h2 {
@@ -36,8 +41,10 @@ h1 {
 
 /* Table styling for time slots */
 .booking-table {
+    border: 10px solid #82aaff;
     width: 100%;
     border-collapse: collapse;
+
 }
 
 .booking-table th,
@@ -49,7 +56,7 @@ h1 {
 }
 
 .booking-table th {
-    background-color: #f2f2f2;
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
 }
 
 .available {
@@ -68,3 +75,27 @@ h1 {
     color: black; /* Set break row text color to black */
     font-style: italic;
 }
+
+.week-swiper {
+    display: flex;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    padding: 10px 0;
+  }
+  
+  .day-card {
+    flex: 0 0 auto;
+    width: 100px;
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #f0f0f0;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .day-card.selected {
+    background-color: #eb9b87;
+  }
+  

@@ -14,8 +14,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login.js';
 
 const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  let [startTime, setStartTime] = useState("");
+  let [endTime, setEndTime] = useState("");
   const [purpose, setPurpose] = useState("");
   const [staffName, setStaffName] = useState("");
   const [password, setPassword] = useState(""); 
@@ -27,6 +27,7 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
+    console.log(selectedDate)
   };
   
   const user = auth.currentUser;
@@ -36,6 +37,15 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   const convertToIST = (date) => {
     return new Date(date).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
   };
+  useEffect(() => {
+    if (selectedStartTime) {
+      setStartTime(selectedStartTime);
+    }
+    if (selectedEndTime) {
+      setEndTime(selectedEndTime);
+    }
+  }, [selectedStartTime, selectedEndTime]);
+
   
   useEffect(() => {
     const fetchBookings = async () => {
@@ -322,24 +332,32 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
         <label>
         Start Time:
         <input
+          disabled="TRUE"
           type="datetime-local"
           value={selectedStartTime}
           onChange={(e) => setStartTime(e.target.value)}
           style={{
             border: "1px solid #ccc",
             borderRadius: "5px",
+            color: "hsl(0,100%, 10%)",/* Increase the lightness percentage for brighter color */
+            background: "linear-gradient(145deg, #235CFA, #82aaff)", /* Gradient on button */
+
           }}
         />
       </label>
       <label>
         End Time:
         <input
+          disabled="TRUE"
           type="datetime-local"
           value={selectedEndTime}
           onChange={(e) => setEndTime(e.target.value)}
           style={{
             border: "1px solid #ccc",
             borderRadius: "5px",
+            color: "hsl(0,100%, 10%)",/* Increase the lightness percentage for brighter color */
+            background: "linear-gradient(145deg, #235CFA, #82aaff)", /* Gradient on button */
+
           }}
         />
       </label>
@@ -352,6 +370,7 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
             style={{
               border: "1px solid #ccc",
               borderRadius: "5px",
+          
             }}
           />
         </label>
