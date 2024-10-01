@@ -407,7 +407,7 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
   <div>
     <h3>Existing Bookings</h3>
     <div className="bookings-table">
-    <table className="bookings-container" style={{ borderCollapse: "collapse", width: "100%" }}>
+    <table className="bookings-container" style={{ borderCollapse: "collapse", width: "100%",tableLayout:"auto"}}>
       <thead>
         <tr>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>Start Time</th>

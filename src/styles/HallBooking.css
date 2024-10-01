@@ -3,16 +3,16 @@
     text-align: center;
     padding: 20px;
     font-family: 'Roboto', sans-serif; /* Changed to Roboto for a modern feel */
-    background: linear-gradient(145deg, #1e40af, #3b82f6); /* Deepened the gradient */
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
 }
 
 /* Main Heading */
 h1 {
-    font-size: 2rem; /* Slightly larger heading for better visibility */
+    font-size: 1.8rem; /* Larger heading for better visibility */
     margin-bottom: 25px;
-    color: #0f172a; /* Darker shade for better contrast */
-    font-weight: 700; /* Bold heading */
-    letter-spacing: 1.5px; /* Improved spacing */
+    color: #111; /* Slightly darker shade of black */
+    font-weight: 700; /* Make heading bolder */
+    letter-spacing: 1.5px; /* Improve letter spacing for a cleaner look */
 }
 
 /* Flexbox grid for the hall sections */
@@ -26,25 +26,23 @@ h1 {
 
 /* Styling each department's hall section */
 .hall-section {
-    background: linear-gradient(145deg, #10b981, #3b82f6); /* Light green to ocean blue */
-    padding: 2rem;
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
+    padding: 4rem;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Added depth to the sections */
     text-align: center;
-    border: 4px solid #60a5fa; /* Light blue border */
-    margin-top: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 4px solid #82aaff;
+    transition: transform 0.3s ease; /* Smooth transition effect */
 }
 
 .hall-section:hover {
-    transform: scale(1.05); /* Slight scale effect on hover */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Increased shadow on hover */
+    transform: scale(1.05); /* Slightly scale the section on hover */
 }
 
 .hall-section h2 {
     font-size: 1.75rem; /* Increased size for hall section titles */
     margin-bottom: 15px;
-    color: #ffffff; /* White text for contrast */
+    color: #fff; /* White text for better contrast */
     font-weight: 600;
 }
 
@@ -66,25 +64,25 @@ h1 {
 }
 
 .booking-table th {
-    background: linear-gradient(145deg, #34d399, #60a5fa); /* Light green to light blue */
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
     color: white;
     font-weight: bold;
     font-size: 1.1rem;
 }
 
 .available {
-    background-color: #d1fae5; /* Soft green for availability */
-    color: #065f46; /* Darker green text */
+    background-color: #d4edda;
+    color: #155724; /* Green for availability */
 }
 
 .booked {
-    background-color: #fee2e2; /* Soft red for booked slots */
-    color: #b91c1c; /* Dark red for booked text */
+    background-color: #f8d7da;
+    color: #721c24; /* Red for booked slots */
 }
 
 .break-row {
-    background-color: #fff3cd; /* Yellow for breaks */
-    color: #856404;
+    background-color: #fff3cd;
+    color: #856404; /* Yellow for break rows */
     font-style: italic;
 }
 
@@ -98,24 +96,23 @@ h1 {
 
 .day-card {
     flex: 0 0 auto;
-    width: 120px;
+    width: 120px; /* Slightly larger width for better tap targets */
     padding: 10px;
     margin: 0 10px;
-    background: linear-gradient(145deg, #1d4ed8, #3b82f6); /* Darker gradient */
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .day-card.selected {
-    background: linear-gradient(145deg, #1e40af, #2563eb); /* More vibrant for selected days */
+    background: linear-gradient(145deg, #1d4ed8, #3b82f6);
     color: #fff; /* White text for selected days */
-    transform: scale(1.05); /* Slightly scaled when selected */
+    transform: scale(1.05); /* Slight scale on selection */
 }
 
 .day-card:hover {
-    background-color: #38bdf8; /* Bright blue hover effect */
-    transform: scale(1.05);
+    background-color: #eb9b87; /* Same color as selected for hover */
 }
