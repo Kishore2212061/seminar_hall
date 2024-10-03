@@ -17,7 +17,9 @@ const Login = () => {
   // Redirect to Hall Status if user is already logged in
   useEffect(() => {
     if (user) {
-      navigate("/hall-status");
+      setEmail("");
+      setPassword("");
+      navigate("/hall-booking");
     }
   }, [user, navigate]);
 
@@ -38,7 +40,7 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/hall-status");
+      navigate("/hall-booking");
     } catch (error) {
       alert("Invalid credentials.");
       console.error(error);

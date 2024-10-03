@@ -55,27 +55,31 @@ const HallBooking = () => {
           const bookingDate = new Date(data.startTime).toISOString().split('T')[0]; // Extract booking date
           const fullStartTime = new Date(data.startTime);
           const fullEndTime = new Date(data.endTime);
-  
-          // Only consider bookings for the selected date
-          if (bookingDate === selectedDate) {
-            const bookedSlots = timeSlots.filter((slot) => {
-              return (
-                fullStartTime >= new Date(`${bookingDate}T${slot.start}:00`) &&
-                fullEndTime <= new Date(`${bookingDate}T${slot.end}:00`) && 
-                slot.isBreak !== true
-              );
-            });
-  
-            if (bookedSlots.length > 0) {
-              const hallId = seminarHalls.find(hall => hall.name === departmentName)?.id;
-              if (hallId) {
-                if (!newBookings[hallId]) {
-                  newBookings[hallId] = [];
-                }
-                bookedSlots.forEach(slot => newBookings[hallId].push(slot.id));
-              }
-            }
-          }
+  // Only consider bookings for the selected date
+if (bookingDate === selectedDate) {
+  const bookedSlots = timeSlots.filter((slot) => {
+    const slotStartTime = new Date(`${bookingDate}T${slot.start}:00`);
+    const slotEndTime = new Date(`${bookingDate}T${slot.end}:00`);
+
+    // Check if the time ranges overlap
+    const isOverlapping =
+      (fullStartTime < slotEndTime && fullEndTime > slotStartTime) &&
+      slot.isBreak !== true;
+
+    return isOverlapping;
+  });
+
+  if (bookedSlots.length > 0) {
+    const hallId = seminarHalls.find(hall => hall.name === departmentName)?.id;
+    if (hallId) {
+      if (!newBookings[hallId]) {
+        newBookings[hallId] = [];
+      }
+      bookedSlots.forEach(slot => newBookings[hallId].push(slot.id));
+    }
+  }
+}
+
         });
   
         setBookings(newBookings);
@@ -90,7 +94,11 @@ const HallBooking = () => {
   const handleSlotClick = (slot) => {
     setStartTime(`${selectedDate}T${slot.start}`);
     setEndTime(`${selectedDate}T${slot.end}`);
-
+    const flag=new Date(`${selectedDate}T${slot.start}`)
+    if (flag < new Date()) {
+      alert("Start time cannot be in the past.");
+      return;
+    }
     // Scroll to the booking section
     if (bookingRef.current) {
       bookingRef.current.scrollIntoView({ behavior: 'smooth' });

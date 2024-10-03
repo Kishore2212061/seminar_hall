@@ -7,6 +7,7 @@ import Register from "./components/Register";
 import HallBooking from "./components/HallBooking"; // Import HallBooking
 import "./styles/Auth.css";
 import AppLayout from "./components/AppLayout";
+import HallStatus from "./components/HallStatus";
 
 const App = () => {
   return (
@@ -38,7 +39,9 @@ const Navigation = () => {
           </>
         ) : (
           <>
-            <li><Link to="/hall-booking" className="nav-link">VISUAL BOOKING</Link></li>
+            <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
+            <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
+
           </>
         )}
       </ul>
@@ -54,8 +57,8 @@ const AppRoutes = () => {
     <RouterRoutes>
     <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
     <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
-    <Route path="/hall-status" element={user ? <HallBooking /> : <Navigate to="/login" />} />
     <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
+    <Route path="/hall-status" element={user ? <HallStatus /> : <Navigate to="/login" />} />
   </RouterRoutes>
   );
 };

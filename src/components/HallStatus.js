@@ -16,18 +16,23 @@ import Login from './Login.js';
 const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   let [startTime, setStartTime] = useState("");
   let [endTime, setEndTime] = useState("");
+  let strt;
+  let en;
   const [purpose, setPurpose] = useState("");
   const [staffName, setStaffName] = useState("");
   const [password, setPassword] = useState(""); 
   const [existingBookings, setExistingBookings] = useState([]);
   const [isBooking, setIsBooking] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [staffNames, setStaffNames] = useState([]); // Array to hold staff names
+  const [filteredStaffNames, setFilteredStaffNames] = useState([]); // Array for filtered suggestions
   const navigate = useNavigate();
   const auth = getAuth();
+  const [focused, setFocused] = useState(false); 
+  const staffNamesList = ['mr.Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Adams'];
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
-    console.log(selectedDate)
   };
   
   const user = auth.currentUser;
@@ -40,9 +45,13 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   useEffect(() => {
     if (selectedStartTime) {
       setStartTime(selectedStartTime);
+      document.getElementById("startt").value=selectedStartTime;
+    
     }
     if (selectedEndTime) {
       setEndTime(selectedEndTime);
+      document.getElementById("endd").value=selectedEndTime;
+
     }
   }, [selectedStartTime, selectedEndTime]);
 
@@ -127,14 +136,16 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   const handleBooking = async () => {
     if (isBooking) return; // Prevent further clicks while booking
     setIsBooking(true); // Disable the button
-  
-    if (!startTime || !endTime || !purpose || !staffName || !password) {
+    strt=document.getElementById("startt").value;
+    en=document.getElementById("endd").value;
+
+    if (!strt || !en || !purpose || !staffName || !password) {
       alert("Please fill in all fields, including password.");
       setIsBooking(false);
       return;
     }
   
-    const startDate = new Date(startTime).toISOString().split("T")[0];
+    const startDate = new Date(strt).toISOString().split("T")[0];
     const today = new Date().toISOString().split("T")[0];
     
     // Calculate max booking date (one week from today)
@@ -148,9 +159,8 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
       return;
     }
   
-    const startDateTime = new Date(startTime);
-    const endDateTime = new Date(endTime);
-  
+    const startDateTime = new Date(strt);
+    const endDateTime = new Date(en);
     if (startDateTime < new Date()) {
       alert("Start time cannot be in the past.");
       setIsBooking(false);
@@ -192,8 +202,8 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
         // If no conflict, proceed with booking
         await transaction.set(doc(collection(db, "bookings")), {
           department,
-          startTime,
-          endTime,
+          startTime:strt,
+          endTime:en,
           purpose,
           staffName,
           bookedBy: user.email,
@@ -224,7 +234,35 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
       setIsBooking(false); // Re-enable the button after the process
     }
   };
+  const handleStaffNameChange = (e) => {
+    const input = e.target.value;
+    setStaffName(input);
   
+    if (input) {
+      // Filter staff names based on the input and limit the results to 2
+      const filtered = staffNamesList
+        .filter(name => name.toLowerCase().includes(input.toLowerCase()))
+        .slice(0, 2); // Limit the results to 2 suggestions
+      setFilteredStaffNames(filtered);
+    } else {
+      setFilteredStaffNames([]); // Clear the suggestions if input is empty
+    }
+  };
+  
+
+  const handleSuggestionClick = (name) => {
+    setStaffName(name);
+    setFilteredStaffNames([]); // Hide the suggestions after clicking
+  };
+
+  // Handle focus and blur events
+  const handleFocus = () => {
+    setFocused(true);
+  };
+  const handleBlur = () => {
+    setTimeout(() => setFocused(false), 10); // Delay hiding suggestions slightly to allow click
+  };
+
 const handleCancelBooking = async (bookingId, bookingPassword) => {
   const enteredPassword = prompt("Enter the Session Id to cancel this booking:");
 
@@ -246,71 +284,79 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
 };
 
   
-  // Function to generate the PDF report
-  const generateReport = async () => {
-    if (!selectedDate) {
-      alert("Please select a date");
+const generateReport = async () => {
+  if (!selectedDate && !staffName) {
+      alert("Please select a date or provide a staff name");
       return;
-    }
-  
-    const startOfDay = new Date(selectedDate);
-    startOfDay.setHours(0, 0, 0, 0);
-  
-    const endOfDay = new Date(selectedDate);
-    endOfDay.setHours(23, 59, 59, 999);
-  
-    // Fetch bookings for the selected date based on endTime only
-    const q = query(
+  }
+
+  const startOfDay = new Date(selectedDate);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(selectedDate);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  // Fetch all bookings for the selected department
+  const q = query(
       collection(db, "bookings"),
-      where("department", "==", department),
-    );
-  
-    const querySnapshot = await getDocs(q);
-  
-    // Map all bookings into an array and filter by start time
-    const allBookings = querySnapshot.docs.map((doc) => ({
+      where("department", "==", department)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  // Map all bookings into an array
+  const allBookings = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }));
-  
-    const filteredBookings = allBookings.filter(booking => {
+  }));
+
+  // Filter bookings based on selected cases
+  const filteredBookings = allBookings.filter(booking => {
       const bookingStart = new Date(booking.startTime);
-      return bookingStart >= startOfDay && bookingStart <= endOfDay;
-    });
-  
-    // Sort bookings by start time
-    filteredBookings.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-  
-    // Generate the PDF report using jsPDF
-    const doc = new jsPDF();
-  
-    // Title
-    doc.text(`Report for Seminar Hall Bookings on ${selectedDate} (${department})`, 10, 10);
-  
-    // Add the table headers
-    const tableColumn = ['Start Time', 'End Time', 'Purpose', 'Staff Name', 'Status'];
-    const tableRows = [];
-  
-    // Add data to the rows
-    filteredBookings.forEach(booking => {
+      
+      // Case 1: Filter by date only
+      const isDateMatched = selectedDate ? (bookingStart >= startOfDay && bookingStart <= endOfDay) : true;
+      
+      // Case 2: Filter by staff name
+      const isStaffMatched = staffName ? booking.staffName === staffName : true;
+
+      // Return true if either case is satisfied
+      return isDateMatched && isStaffMatched;
+  });
+
+  // Sort bookings by start time
+  filteredBookings.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+
+  // Generate the PDF report using jsPDF
+  const doc = new jsPDF();
+
+  // Title
+  const title = `Report for Seminar Hall Bookings${selectedDate ? ` on ${selectedDate}` : ''}${staffName ? ` by ${staffName}` : ''} (${department})`;
+  doc.text(title, 10, 10);
+
+  // Add the table headers
+  const tableColumn = ['Start Time', 'End Time', 'Staff Name', 'Purpose', 'Status'];
+  const tableRows = [];
+
+  // Add data to the rows
+  filteredBookings.forEach(booking => {
       const bookingData = [
-        convertToIST(booking.startTime),
-        convertToIST(booking.endTime),
-        booking.purpose,
-        booking.staffName,
-        booking.status,
+          convertToIST(booking.startTime),
+          convertToIST(booking.endTime),
+          booking.staffName,
+          booking.purpose,
+          booking.status,
       ];
       tableRows.push(bookingData);
-    });
-  
-    // Add the table to the PDF
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
-  
-    // Save the PDF
-    doc.save(`seminar_hall_bookings_${selectedDate}.pdf`);
-  };
-  
-  
+  });
+
+  // Add the table to the PDF
+  doc.autoTable(tableColumn, tableRows, { startY: 20 });
+
+  // Save the PDF
+  doc.save(`seminar_hall_bookings_${selectedDate || 'all'}_${staffName || 'all'}.pdf`);
+};
+
   
 
   const handleLogout = async () => {
@@ -322,20 +368,24 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
       console.error("Error logging out: ", error);
     }
   }
+const today = new Date().toISOString().slice(0, 16); // Current date and time in YYYY-MM-DDTHH:MM format
+const oneWeekFromToday = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16); // 7 days from now
+
 
   return (
     <div className="hall-status-container">
       <h2>Seminar Hall Status for {department}</h2>
-
+      <form autoComplete="off">
       <div>
         <h3>Book the Seminar Hall</h3>
         <label>
         Start Time:
         <input
-          disabled="TRUE"
+          // disabled="TRUE"
           type="datetime-local"
-          value={selectedStartTime}
           onChange={(e) => setStartTime(e.target.value)}
+          min={today} // Set minimum date and time to current time
+          max={oneWeekFromToday} // Set maximum date and time to 7 days from now
           style={{
             border: "1px solid #ccc",
             borderRadius: "5px",
@@ -343,15 +393,17 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
             background: "linear-gradient(145deg, #235CFA, #82aaff)", /* Gradient on button */
 
           }}
-        />
+          
+        id="startt" />
       </label>
       <label>
         End Time:
         <input
-          disabled="TRUE"
+          // disabled="TRUE"
           type="datetime-local"
-          value={selectedEndTime}
           onChange={(e) => setEndTime(e.target.value)}
+          min={today} // Set minimum date and time to current time
+          max={oneWeekFromToday} // Set maximum date and time to 7 days from now
           style={{
             border: "1px solid #ccc",
             borderRadius: "5px",
@@ -359,8 +411,32 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
             background: "linear-gradient(145deg, #235CFA, #82aaff)", /* Gradient on button */
 
           }}
-        />
+       id="endd" />
       </label>
+      <div className="form-group">
+        <label htmlFor="staffName">Staff Name:</label>
+        <input
+          type="text"
+          id="staffName"
+          value={staffName}
+
+          onChange={handleStaffNameChange} // Updated handler for input change
+          onFocus={handleFocus} // Trigger on focus
+          onBlur={handleBlur}   // Trigger on blur
+          required
+        />
+        {focused&&filteredStaffNames.length > 0  &&(
+          <ul className="suggestions-list">
+            {filteredStaffNames.map((name, index) => (
+              <li key={index} onClick={() => handleSuggestionClick(name)}>
+                {name}
+              </li>
+              
+            ))}
+            
+          </ul>
+        )}
+      </div>
         <label>
           Purpose:
           <input
@@ -375,18 +451,6 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
           />
         </label>
         <label>
-          Staff Name:
-          <input
-            type="text"
-            value={staffName}
-            onChange={(e) => setStaffName(e.target.value)}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
-        </label>
-        <label>
           Session Id (for cancellation):
           <input
             type="password"
@@ -396,12 +460,15 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
               border: "1px solid #ccc",
               borderRadius: "5px",
             }}
+            name={`staffName-${Math.random()}`} // Use a dynamic or randomized name
+            autoComplete="off"
           />
         </label>
         <button onClick={handleBooking} disabled={isBooking}>
           {isBooking ? "Booking..." : "Book Hall"}
         </button>
       </div>
+      </form>
 
 {existingBookings.length > 0 ? (
   <div>
@@ -412,8 +479,8 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
         <tr>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>Start Time</th>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>End Time</th>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Purpose</th>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>Staff Name</th>
+          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Purpose</th>
           <th style={{ border: "1px solid #ddd", padding: "8px" }}>Action</th>
         </tr>
       </thead>
@@ -422,8 +489,8 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
           <tr key={booking.id}>
             <td style={{ border: "1px solid #ddd", padding: "8px" }}>{convertToIST(booking.startTime)}</td>
             <td style={{ border: "1px solid #ddd", padding: "8px" }}>{convertToIST(booking.endTime)}</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{booking.purpose}</td>
             <td style={{ border: "1px solid #ddd", padding: "8px" }}>{booking.staffName}</td>
+            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{booking.purpose}</td>
             <td style={{ border: "1px solid #ddd", padding: "8px" }}>
             {booking.status === "finished" ? (
   <span>Finished</span>  // Show "Finished" if the booking is finished
@@ -442,15 +509,41 @@ const handleCancelBooking = async (bookingId, bookingPassword) => {
 )}
 
 <div>
-        <h3>Generate Report</h3>
-        <label>
-          Select Date:
-          <input type="date" value={selectedDate} onChange={handleDateChange} />
-        </label>
-        <button onClick={generateReport}>Generate Report
-      </button>  
-      <button class="logout-btn" onClick={handleLogout}>Logout</button>    
+  <h3>Generate Report</h3>
+  <label>
+    Select Date:
+    <input type="date" value={selectedDate} onChange={handleDateChange} />
+  </label>
+  <br />
+  <div className="form-group">
+        <label htmlFor="staffName">Staff Name:</label>
+        <input
+          type="text"
+          id="staffName"
+          value={staffName}
+
+          onChange={handleStaffNameChange} // Updated handler for input change
+          onFocus={handleFocus} // Trigger on focus
+          onBlur={handleBlur}   // Trigger on blur
+          required
+        />
+        {focused&&filteredStaffNames.length > 0  &&(
+          <ul className="suggestions-list">
+            {filteredStaffNames.map((name, index) => (
+              <li key={index} onClick={() => handleSuggestionClick(name)}>
+                {name}
+              </li>
+              
+            ))}
+            
+          </ul>
+        )}
       </div>
+  <br />
+  <button onClick={generateReport}>Generate Report</button>
+  <button class="logout-btn" onClick={handleLogout}>Logout</button>
+</div>
+
   </div>
   );
 };

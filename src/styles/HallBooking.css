@@ -8,7 +8,7 @@
 
 /* Main Heading */
 h1 {
-    font-size: 1.8rem; /* Larger heading for better visibility */
+    font-size: 2rem; /* Adjusted for better visibility on larger screens */
     margin-bottom: 25px;
     color: #111; /* Slightly darker shade of black */
     font-weight: 700; /* Make heading bolder */
@@ -33,6 +33,8 @@ h1 {
     text-align: center;
     border: 4px solid #82aaff;
     transition: transform 0.3s ease; /* Smooth transition effect */
+    flex: 1 1 300px; /* Allow flexibility in width */
+    max-width: 400px; /* Maximum width for hall sections */
 }
 
 .hall-section:hover {
@@ -115,4 +117,39 @@ h1 {
 
 .day-card:hover {
     background-color: #eb9b87; /* Same color as selected for hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem; /* Smaller font size for mobile */
+    }
+
+    .hall-section {
+        padding: 2rem; /* Reduced padding on smaller screens */
+    }
+
+    .booking-table th,
+    .booking-table td {
+        font-size: 0.9rem; /* Smaller font size for table cells */
+    }
+
+    .day-card {
+        width: 100px; /* Smaller width for day cards on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .hall-section {
+        flex: 1 1 100%; /* Full width for hall sections on mobile */
+    }
+
+    h1 {
+        font-size: 1.25rem; /* Further reduced size for smaller screens */
+    }
+
+    .day-card {
+        width: 80px; /* Even smaller width for day cards */
+        padding: 8px; /* Reduced padding */
+    }
 }

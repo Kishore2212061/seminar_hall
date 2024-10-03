@@ -62,30 +62,48 @@ body {
 /* Ensure the table is wrapped in a responsive container */
 .bookings-container {
   width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
+  overflow: auto;
   margin: 0 auto;
   white-space: nowrap;
 }
 
 /* Table Styling */
 .bookings-table {
-  width: 150%;
-  max-width: 100%;
+  width: 100%;
   border-collapse: collapse;
   margin: 10px 0;
   font-size: 0.9rem;
   text-align: center;
   background-color: #239dfa;
   border-radius: 8px; /* Slight rounded corners for modern look */
-  overflow: hidden;
+  overflow: auto;
 }
 
 .bookings-table th,
 .bookings-table td {
   border: 1px solid black;
-  padding: 8px;
+  width:auto;
+  white-space: wrap;
 }
+.suggestions-list {
+  max-width: 830px; /* Set a reasonable max-width */
+  width: 100%; /* Make it responsive and take up available width */
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+.suggestions-list li {
+
+  /* padding: 10px; */
+   /* Add some padding for better readability */
+  box-sizing: border-box; /* Include padding within the width */
+  border-bottom: 1px solid #ccc; /* Optional: add a border between items */
+}
+
+
 
 .bookings-table th {
   background-color: #2367fa;
@@ -101,12 +119,18 @@ body {
   word-wrap: break-word;
   max-width: 200px;
 }
+@media (max-width: 600px) {
+  .suggestions-list {
+    max-width: 100px; /* Reduce the width on smaller screens */
+  }
+}
 
 /* Responsive Styles for small screens */
 @media (min-width: 100px) and (max-width: 768px) {
   .bookings-container {
-    overflow-x: auto;
+    overflow: auto;
   }
+
 
   .bookings-table {
     font-size: 0.7rem; /* More readable on smaller screens */
@@ -115,6 +139,7 @@ body {
 
   .bookings-table td {
     max-width: 100px;
+    padding: 10px;
   }
 }
 
@@ -164,7 +189,7 @@ button.logout-btn:hover {
   display: flex;
   justify-content: center;
   background-color: #235CFA;
-  padding: 12px; /* Increased padding for a thicker navbar */
+  padding: 20px; /* Increased padding for a thicker navbar */
 }
 
 nav ul {
@@ -176,7 +201,7 @@ nav ul {
 }
 
 nav ul li {
-  margin-right: 20px; /* Increased spacing for better readability */
+  margin-right: 5px; /* Increased spacing for better readability */
 }
 
 nav ul li a {
@@ -221,6 +246,26 @@ footer {
   }
 
   nav ul li a {
-    font-size: 20px;
+    font-size: 15px;
   }
+}
+.suggestions-list {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  max-height: 150px; /* Set a maximum height for the suggestions list */
+  overflow-y: auto; /* Enable vertical scrolling */
+  position: absolute; /* Position it relative to the input */
+  background-color: white;
+  z-index: 1000; /* Ensure suggestions are above other elements */
+  width: 100%; /* Match the width of the input field */
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f1f1f1; /* Highlight on hover */
 }
