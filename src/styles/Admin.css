@@ -1,0 +1,108 @@
+.admin-container {
+  margin: 20px;
+}
+
+.booking-table {
+  width: 100%;
+  background-color:skyblue;
+  border-collapse: collapse;
+  margin-top: 20px;
+  overflow-x: auto; /* Enable horizontal scroll on small screens */
+  font-family: 'Roboto', sans-serif; /* Modern font for cleaner look */
+}
+
+.booking-table th, .booking-table td {
+  border: 1px solid #ddd; /* Lighter border for a cleaner look */
+  padding: 10px;
+  text-align: center;
+  white-space: nowrap; /* Prevent content from wrapping */
+}
+
+.booking-table th {
+  background-color: #1d4ed8; /* Deep blue header for a modern look */
+  color: #ffffff; /* White text for contrast */
+}
+
+.booked {
+  background-color: #34d399; /* Softer green for booked slots */
+  color: #ffffff; /* White text for readability */
+}
+
+.available {
+  background-color: #e5e7eb; /* Light gray background for available slots */
+  color: #000000; /* Black text for better contrast */
+}
+
+.not-booked {
+  background-color: #facc15; /* Soft gold for not booked slots */
+  color: #856404; /* Dark gold for text */
+}
+
+.finished {
+  background-color: #ef4444; /* Soft red for finished slots */
+  color: #ffffff; /* White text for readability */
+}
+
+.break {
+  background-color: #f87171; /* Light coral for breaks */
+  color: #ffffff; /* White text for contrast */
+}
+
+.booking-table td[title] {
+  cursor: pointer;
+}
+
+.booking-table td[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75); /* Tooltip with dark background */
+  color: white;
+  padding: 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .booking-table th, .booking-table td {
+    padding: 8px; /* Reduce padding for smaller screens */
+    font-size: 12px; /* Adjust font size */
+  }
+
+  .admin-container {
+    margin: 10px; /* Reduce container margin on smaller screens */
+  }
+  
+  .booking-table {
+    display: block;
+    overflow-x: auto; /* Allow horizontal scrolling */
+  }
+
+  .booking-table th, .booking-table td {
+    white-space: nowrap; /* Prevent cell content from wrapping */
+  }
+
+  .booking-table td {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-table th, .booking-table td {
+    padding: 6px;
+    font-size: 10px; /* Further reduce font size for very small screens */
+  }
+
+  .admin-container {
+    margin: 5px;
+  }
+
+  .booking-table {
+    font-size: 10px;
+    overflow-x: auto; /* Ensure the table is scrollable on very small screens */
+  }
+}

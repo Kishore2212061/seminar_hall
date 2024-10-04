@@ -8,7 +8,7 @@ import HallBooking from "./components/HallBooking"; // Import HallBooking
 import "./styles/Auth.css";
 import AppLayout from "./components/AppLayout";
 import HallStatus from "./components/HallStatus";
-
+import Admin from "./components/Admin";
 const App = () => {
   return (
     <AuthProvider>
@@ -32,18 +32,23 @@ const Navigation = () => {
   return (
     <nav className="navbar">
       <ul className="navbar-list">
-        {!user ? (
-          <>
-            <li><Link to="/register" className="nav-link">Register</Link></li>
-            <li><Link to="/login" className="nav-link">Login</Link></li> {/* Corrected login link */}
-          </>
-        ) : (
-          <>
-            <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
-            <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
+      {!user ? (
+  <>
+    <li><Link to="/register" className="nav-link">Register</Link></li>
+    <li><Link to="/login" className="nav-link">Login</Link></li> {/* Corrected login link */}
+  </>
+) : (
+  <>
+    {/* Check if user is NOT an admin */}
+    { !user.email.includes('hod') && (
+      <>
+        <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
+        <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
+      </>
+    )}
+  </>
+)}
 
-          </>
-        )}
       </ul>
     </nav>
   );
@@ -55,6 +60,7 @@ const AppRoutes = () => {
 
   return (
     <RouterRoutes>
+      <Route path="/admin" element={<Admin />} />
     <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
     <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
     <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />

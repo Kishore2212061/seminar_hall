@@ -1,9 +1,10 @@
 /* Base Styles */
 body {
-  background-color: #f0f4f8; /* Softer background for better readability */
+  background-color: #f7f7f7; /* Soft neutral background for a clean look */
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
+  color: #2c3e50; /* Dark navy-blue for better readability */
 }
 
 /* Flex Container for Main Layout */
@@ -17,133 +18,76 @@ body {
 
 /* Auth Container Styles (Login and Register) */
 .auth-container {
-  background: linear-gradient(145deg, #1d4ed8, #3b82f6); /* Gradient background */
+  background: linear-gradient(145deg, #3498db, #8e44ad); /* Cool blue to rich purple gradient */
   margin: 40px;
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15); /* Increased shadow for depth */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border: 4px solid #82aaff; /* Light blue border */
-  color: white; /* Ensure high contrast */
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 3px solid #2980b9; /* Deep blue border */
+  color: white;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .auth-container:hover {
-  transform: scale(1.03); /* Slight grow on hover */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Elevated shadow */
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .auth-container h2 {
-  margin-bottom: 1px;
-  font-size: 2rem; /* Increased font size for better emphasis */
-  font-weight: 700; /* Bold heading */
+  margin-bottom: 10px;
+  font-size: 2.5rem; /* Larger for prominence */
+  font-weight: 700;
   letter-spacing: 1.2px;
-  color: #fff;
+  color: white; /* Clean white for contrast */
 }
 
 /* Hall Status Container Styles */
 .hall-status-container {
-  background: linear-gradient(145deg, #1d4ed8, #3b82f6);
+  background: linear-gradient(145deg, #3498db, #8e44ad); /* Same gradient for consistency */
   margin: 20px;
   padding: 3rem;
   border-radius: 20px;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border: 4px solid #82aaff;
-  color: black;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 3px solid #8e44ad; /* Matching deep purple border */
+  color: white;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  animation: fadeIn 1.2s ease-in-out;
 }
 
 .hall-status-container:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Ensure the table is wrapped in a responsive container */
-.bookings-container {
-  width: 100%;
-  overflow: auto;
-  margin: 0 auto;
-  white-space: nowrap;
-}
-
-/* Table Styling */
+/* Bookings Table Styles */
 .bookings-table {
   width: 100%;
   border-collapse: collapse;
   margin: 10px 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  overflow: scroll;
   text-align: center;
-  background-color: #239dfa;
-  border-radius: 8px; /* Slight rounded corners for modern look */
-  overflow: auto;
+  background-color: #ecf0f1; /* Light gray for contrast */
+  border-radius: 8px;
+  animation: slideIn 0.8s ease-in-out;
+  border: 2px solid #bdc3c7; /* Subtle but visible border */
 }
-
-.bookings-table th,
-.bookings-table td {
-  border: 1px solid black;
-  width:auto;
-  white-space: wrap;
-}
-.suggestions-list {
-  max-width: 830px; /* Set a reasonable max-width */
-  width: 100%; /* Make it responsive and take up available width */
-  justify-content: flex-start;
-  padding: 0;
-  margin: 0;
-}
-
-
-
-.suggestions-list li {
-
-  /* padding: 10px; */
-   /* Add some padding for better readability */
-  box-sizing: border-box; /* Include padding within the width */
-  border-bottom: 1px solid #ccc; /* Optional: add a border between items */
-}
-
-
 
 .bookings-table th {
-  background-color: #2367fa;
+  background-color: #2980b9; /* Bold blue for headers */
   color: white;
-}
-
-.bookings-table tr:nth-child(even) {
-  background-color: #2387fa;
+  border-bottom: 2px solid #3498db; /* Border for header separation */
 }
 
 .bookings-table td {
-  color: white;
-  word-wrap: break-word;
-  max-width: 200px;
-}
-@media (max-width: 600px) {
-  .suggestions-list {
-    max-width: 100px; /* Reduce the width on smaller screens */
-  }
+  color: #2c3e50; /* Dark navy-blue for text */
+  border: 1px solid #bdc3c7; /* Subtle cell borders */
 }
 
-/* Responsive Styles for small screens */
-@media (min-width: 100px) and (max-width: 768px) {
-  .bookings-container {
-    overflow: auto;
-  }
-
-
-  .bookings-table {
-    font-size: 0.7rem; /* More readable on smaller screens */
-    width: 100%;
-  }
-
-  .bookings-table td {
-    max-width: 100px;
-    padding: 10px;
-  }
-}
-
-/* Button and Input Styles */
+/* Buttons */
 button, input {
   width: 100%;
   padding: 12px;
@@ -151,36 +95,30 @@ button, input {
   border-radius: 5px;
   font-weight: 600;
   font-size: 1rem;
-  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
 button {
-  background: linear-gradient(145deg, #235CFA, #82aaff); /* Gradient on button */
+  background: linear-gradient(145deg, #2ecc71, #27ae60); /* Vibrant green gradient */
   color: white;
   border: none;
   cursor: pointer;
+  animation: fadeIn 1.5s ease-in-out;
 }
 
 button:hover {
-  background: linear-gradient(145deg, #111, #444); /* Darker on hover */
-  transform: scale(1.05); /* Larger hover effect */
+  background: linear-gradient(145deg, #27ae60, #1abc9c); /* Brighter green on hover */
+  transform: scale(1.05);
 }
 
 /* Logout Button Styles */
 button.logout-btn {
-  width: auto;
-  padding: 10px 20px;
-  background-color: #d9534f; /* Red color for logout */
+  background-color: #e74c3c; /* Strong red */
   color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px; /* Add space above the button */
-  transition: background-color 0.3s ease-in-out, transform 0.2s;
 }
 
 button.logout-btn:hover {
-  background-color: #c9302c; /* Darker red on hover */
+  background-color: #c0392b; /* Darker red on hover */
   transform: scale(1.05);
 }
 
@@ -188,84 +126,48 @@ button.logout-btn:hover {
 .navbar {
   display: flex;
   justify-content: center;
-  background-color: #235CFA;
-  padding: 20px; /* Increased padding for a thicker navbar */
-}
-
-nav ul {
-  list-style-type: none;
-  width: 100%;
-  padding: 0;
-  display: flex;
-  justify-content: center; /* Center navigation links */
-}
-
-nav ul li {
-  margin-right: 5px; /* Increased spacing for better readability */
+  padding: 20px;
+  background: #34495e; /* Dark grayish blue for the navbar */
 }
 
 nav ul li a {
-  text-decoration: none;
-  font-size: 1.2rem;
-  color: white;
-  transition: color 0.3s; /* Smooth link color change on hover */
+  font-size: 1.8rem;
+  color: #ecf0f1; /* Soft white for the text */
+  transition: color 0.3s ease-in-out;
 }
 
 nav ul li a:hover {
-  color: #ffdd57; /* Change link color on hover for better feedback */
-  text-decoration: underline;
+  color: #1abc9c; /* Bright turquoise on hover */
 }
 
 /* Footer Styles */
 footer {
-  background-color: #343a40;
-  color: #ffffff;
+  background-color: #34495e; /* Same dark blue-gray */
+  color: #ecf0f1;
   text-align: center;
   padding: 20px;
+  animation: fadeIn 1.5s ease-in-out;
 }
 
 /* Responsive Styles */
-@media (min-width: 100px) and (max-width: 768px) {
+@media (max-width: 768px) {
   .auth-container, .hall-status-container {
-    max-width: 220px;
+    max-width: 300px;
     padding: 1.5rem;
   }
 
-  .auth-container h2 {
-    font-size: 1.25rem;
-  }
-
-  button, input {
-    padding: 6px;
-    font-size: 0.85rem;
-  }
-
-  nav ul li {
-    display: block;
-    margin-bottom: 10px;
-  }
-
   nav ul li a {
-    font-size: 15px;
+    font-size: 1.5rem;
   }
 }
-.suggestions-list {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 5px;
-  max-height: 150px; /* Set a maximum height for the suggestions list */
-  overflow-y: auto; /* Enable vertical scrolling */
-  position: absolute; /* Position it relative to the input */
-  background-color: white;
-  z-index: 1000; /* Ensure suggestions are above other elements */
-  width: 100%; /* Match the width of the input field */
+
+/* Keyframes for Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.suggestions-list li {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.suggestions-list li:hover {
-  background-color: #f1f1f1; /* Highlight on hover */
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

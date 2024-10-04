@@ -14,12 +14,16 @@ const Login = () => {
 
   const { user } = useAuth(); // Use the useAuth hook
 
-  // Redirect to Hall Status if user is already logged in
+  // Redirect to Hall Status or Admin page if the user is already logged in
   useEffect(() => {
     if (user) {
       setEmail("");
       setPassword("");
-      navigate("/hall-booking");
+      if (user.email === "hodcse@nec.edu.in") {
+        navigate("/admin"); // Admin route for HOD
+      } else {
+        navigate("/hall-booking"); // Default route for other users
+      }
     }
   }, [user, navigate]);
 
@@ -40,7 +44,12 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/hall-booking");
+      // If HOD, redirect to admin dashboard
+      if (email === "hodcse@nec.edu.in") {
+        navigate("/admin");
+      } else {
+        navigate("/hall-booking");
+      }
     } catch (error) {
       alert("Invalid credentials.");
       console.error(error);

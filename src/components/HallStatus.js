@@ -188,7 +188,7 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   
           // Check for exact overlap or overlap within the same second
           if (
-            (startDateTime <= existingEnd && endDateTime >= existingStart) || // Overlapping time ranges
+            (startDateTime < existingEnd && endDateTime > existingStart) || // Overlapping time ranges
             (startDateTime.getTime() === existingStart.getTime() && endDateTime.getTime() === existingEnd.getTime()) // Exact second match
           ) {
             hasConflict = true; // Conflict found
