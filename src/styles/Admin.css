@@ -3,11 +3,11 @@
 }
 
 .booking-table {
-  width: 100%;
+  display: block;
   background-color:skyblue;
   border-collapse: collapse;
   margin-top: 20px;
-  overflow-x: auto; /* Enable horizontal scroll on small screens */
+  overflow-x: auto; /* Ensure the table is scrollable on very small screens */
   font-family: 'Roboto', sans-serif; /* Modern font for cleaner look */
 }
 
@@ -54,9 +54,6 @@
 
 .booking-table td[title]:hover::after {
   content: attr(title);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.75); /* Tooltip with dark background */
   color: white;

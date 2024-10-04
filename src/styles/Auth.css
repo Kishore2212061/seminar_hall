@@ -28,10 +28,10 @@ body {
   color: white;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   animation: fadeIn 1s ease-in-out;
+  max-width: 500px;
 }
 
 .auth-container:hover {
-  transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -58,7 +58,6 @@ body {
 }
 
 .hall-status-container:hover {
-  transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -120,24 +119,58 @@ button.logout-btn {
 button.logout-btn:hover {
   background-color: #c0392b; /* Darker red on hover */
   transform: scale(1.05);
-}
-
-/* Navbar Styles */
-.navbar {
+}.navbar {
   display: flex;
   justify-content: center;
+  align-items: center; /* Centers items vertically */
   padding: 20px;
   background: #34495e; /* Dark grayish blue for the navbar */
+  height: 80px; /* You can adjust the height as per your need */
+}
+
+nav ul {
+  list-style: none; /* Removes list dots */
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 30px; /* Adds space between links */
+  justify-content: center; /* Centers the items horizontally */
+  align-items: center; /* Ensures vertical centering */
+}
+
+nav ul li {
+  list-style-type: none; /* No bullets */
 }
 
 nav ul li a {
+  text-decoration: none; /* Removes default underline */
   font-size: 1.8rem;
-  color: #ecf0f1; /* Soft white for the text */
-  transition: color 0.3s ease-in-out;
+  color: #ecf0f1; /* Soft white */
+  position: relative; /* For the animated underline */
+  transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+nav ul li a::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -5px; /* Positioned just below the text */
+  left: 0;
+  background-color: #1abc9c; /* Bright turquoise underline */
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out;
+}
+
+nav ul li a:hover::before {
+  visibility: visible;
+  transform: scaleX(1); /* Expands the underline on hover */
 }
 
 nav ul li a:hover {
-  color: #1abc9c; /* Bright turquoise on hover */
+  color: #1abc9c; /* Bright turquoise text color on hover */
+  transform: scale(1.05); /* Slight scaling effect */
 }
 
 /* Footer Styles */
@@ -153,11 +186,11 @@ footer {
 @media (max-width: 768px) {
   .auth-container, .hall-status-container {
     max-width: 300px;
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
   nav ul li a {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 }
 
