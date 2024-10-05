@@ -37,7 +37,7 @@ body {
 
 .auth-container h2 {
   margin-bottom: 10px;
-  font-size: 2.5rem; /* Larger for prominence */
+  font-size: 2rem; /* Larger for prominence */
   font-weight: 700;
   letter-spacing: 1.2px;
   color: white; /* Clean white for contrast */
@@ -186,7 +186,6 @@ footer {
 @media (max-width: 768px) {
   .auth-container, .hall-status-container {
     max-width: 300px;
-    padding: 2rem;
   }
 
   nav ul li a {
