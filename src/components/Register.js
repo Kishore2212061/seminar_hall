@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import logo from "../assets/Logo.jpeg"; // Corrected path
+import logo from "../assests/Logo.jpeg"; // Corrected path
 import { useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
