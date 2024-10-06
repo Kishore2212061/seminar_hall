@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import logo from "../assests/Logo.jpeg"; // Corrected path
+import logo from "../assets/Logo.jpeg"; // Corrected path
 import { useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
@@ -13,7 +13,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const ADMIN_SECRET_KEY = process.env.REACT_APP_ADMIN_SECRET_KEY; // Use environment variable
- 
+
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
   const validatePassword = (password) => password.length >= 6; // Minimum length check
 
@@ -38,7 +38,24 @@ const Register = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/hall-status"); // Redirect to hall status on successful registration
+
+      // List of HOD emails
+      const adminEmails = [
+        "hodcse@nec.edu.in",
+        "hodmech@nec.edu.in", // Add other department HOD emails here
+        "hodit@nec.edu.in",
+        "hodaids@nec.edu.in",
+        "hodece@nec.edu.in",
+        "hodeee@nec.edu.in",
+        "hodcivil@nec.edu.in"
+      ];
+
+      // Check if the registered email is an HOD email
+      if (adminEmails.includes(email)) {
+        navigate("/admin"); // Redirect to admin page for HOD
+      } else {
+        navigate("/hall-booking"); // Redirect to hall status for other users
+      }
     } catch (error) {
       let errorMessage = "An error occurred. Please try again.";
       switch (error.code) {

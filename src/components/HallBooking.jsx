@@ -24,7 +24,7 @@ const timeSlots = [
   { id: 5, time: 'Lunch Break (12:50 PM - 1:50 PM)', isBreak: true },
   { id: 6, time: '1:50 PM - 2:40 PM', start: '13:50', end: '14:40' },
   { id: 7, time: '2:40 PM - 3:30 PM', start: '14:40', end: '15:30' },
-  { id: 8, time: '3:30 PM - 4:30 PM', start: '16:15', end: '16:30' },
+  { id: 8, time: '3:30 PM - 4:30 PM', start: '15:30', end: '16:30' },
   { id: 9, time: '4:30 PM - 5:15 PM', start: '16:30', end: '17:15' },
 ];
 
@@ -96,7 +96,7 @@ if (bookingDate === selectedDate) {
     setEndTime(`${selectedDate}T${slot.end}`);
     const flag=new Date(`${selectedDate}T${slot.start}`)
     if (flag < new Date()) {
-      alert("Start time cannot be in the past.");
+      alert("Bookings cannot be in the past.");
       return;
     }
     // Scroll to the booking section

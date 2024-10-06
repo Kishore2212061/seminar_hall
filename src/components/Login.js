@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase"; // Ensure this path is correct
 import { useNavigate } from "react-router-dom";
-import logo from "../assests/Logo.jpeg"; // Ensure the path is correct
+import logo from "../assets/Logo.jpeg"; // Ensure the path is correct
 import { useAuth } from "../context/authContext"; // Ensure this path is correct
 import "../styles/Auth.css";
 
@@ -19,8 +19,21 @@ const Login = () => {
     if (user) {
       setEmail("");
       setPassword("");
-      if (user.email === "hodcse@nec.edu.in") {
-        navigate("/admin"); // Admin route for HOD
+      
+      // List of department emails allowed to access the admin page
+      const adminEmails = [
+        "hodcse@nec.edu.in",
+        "hodmech@nec.edu.in", // Add other department HOD emails here
+        "hodit@nec.edu.in",
+        "hodaids@nec.edu.in",
+        "hodece@nec.edu.in",
+        "hodeee@nec.edu.in",
+        "hodcivil@nec.edu.in"
+      ];
+
+      // Check if the user email is in the admin list
+      if (adminEmails.includes(user.email)) {
+        navigate("/admin"); // Admin route for department HODs
       } else {
         navigate("/hall-booking"); // Default route for other users
       }
@@ -44,8 +57,20 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // If HOD, redirect to admin dashboard
-      if (email === "hodcse@nec.edu.in") {
+      
+      // List of department emails allowed to access the admin page
+      const adminEmails = [
+        "hodcse@nec.edu.in",
+        "hodmech@nec.edu.in", // Add other department HOD emails here
+        "hodit@nec.edu.in",
+        "hodaids@nec.edu.in",
+        "hodece@nec.edu.in",
+        "hodeee@nec.edu.in",
+        "hodcivil@nec.edu.in"
+      ];
+
+      // Redirect based on user email
+      if (adminEmails.includes(email)) {
         navigate("/admin");
       } else {
         navigate("/hall-booking");
