@@ -162,7 +162,7 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
     const startDateTime = new Date(strt);
     const endDateTime = new Date(en);
     if (startDateTime < new Date()) {
-      alert("Start time cannot be in the past.");
+      alert("Bookings cannot be in the past.");
       setIsBooking(false);
       return;
     }
