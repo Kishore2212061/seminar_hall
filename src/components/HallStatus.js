@@ -418,23 +418,22 @@ const oneWeekFromToday = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOStr
         <input
           type="text"
           id="staffName"
-          value={staffName}
-
-          onChange={handleStaffNameChange} // Updated handler for input change
-          onFocus={handleFocus} // Trigger on focus
-          onBlur={handleBlur}   // Trigger on blur
+          onChange={handleStaffNameChange}  // Handles input change
+          onFocus={handleFocus}             // Shows the suggestions on focus
+          onBlur={handleBlur}               // Handles blur with a slight delay
+          value={staffName}                 // Sets the value of the input
           required
         />
         {focused&&filteredStaffNames.length > 0  &&(
           <ul className="suggestions-list">
-            {filteredStaffNames.map((name, index) => (
-              <li key={index} onClick={() => handleSuggestionClick(name)}>
-                {name}
-              </li>
-              
-            ))}
+          {filteredStaffNames.map((name, index) => (
+            <li key={index} onMouseDown={() => handleSuggestionClick(name)}> 
+                           {name}
+            </li>
             
-          </ul>
+          ))}
+          
+        </ul>
         )}
       </div>
         <label>
@@ -470,44 +469,6 @@ const oneWeekFromToday = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOStr
       </div>
       </form>
 
-{existingBookings.length > 0 ? (
-  <div>
-    <h3>Existing Bookings</h3>
-    <div className="bookings-table">
-    <table className="bookings-container" style={{ borderCollapse: "collapse", width: "100%",tableLayout:"auto"}}>
-      <thead>
-        <tr>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Start Time</th>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>End Time</th>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Staff Name</th>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Purpose</th>
-          <th style={{ border: "1px solid #ddd", padding: "8px" }}>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {existingBookings.map((booking) => (
-          <tr key={booking.id}>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{convertToIST(booking.startTime)}</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{convertToIST(booking.endTime)}</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{booking.staffName}</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>{booking.purpose}</td>
-            <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-            {booking.status === "finished" ? (
-  <span>Finished</span>  // Show "Finished" if the booking is finished
-) : (
-  <button onClick={() => handleCancelBooking(booking.id, booking.password)}>Cancel</button>  // Show "Cancel" button if the booking is not finished
-)}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    </div>
-  </div>
-) : (
-  <p>No existing bookings available.</p>
-)}
-
 <div>
   <h3>Generate Report</h3>
   <label>
@@ -520,18 +481,17 @@ const oneWeekFromToday = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOStr
         <input
           type="text"
           id="staffName"
-          value={staffName}
-
-          onChange={handleStaffNameChange} // Updated handler for input change
-          onFocus={handleFocus} // Trigger on focus
-          onBlur={handleBlur}   // Trigger on blur
+          onChange={handleStaffNameChange}  // Handles input change
+          onFocus={handleFocus}             // Shows the suggestions on focus
+          onBlur={handleBlur}               // Handles blur with a slight delay
+          value={staffName}                 // Sets the value of the input
           required
         />
         {focused&&filteredStaffNames.length > 0  &&(
           <ul className="suggestions-list">
             {filteredStaffNames.map((name, index) => (
-              <li key={index} onClick={() => handleSuggestionClick(name)}>
-                {name}
+              <li key={index} onMouseDown={() => handleSuggestionClick(name)}> 
+                             {name}
               </li>
               
             ))}

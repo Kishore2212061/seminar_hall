@@ -28,7 +28,7 @@ body {
   color: white;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   animation: fadeIn 1s ease-in-out;
-  max-width: 500px;
+
 }
 
 .auth-container:hover {
@@ -202,4 +202,9 @@ footer {
 @keyframes slideIn {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+.suggestions-list{
+  background-color:#fff;
+  color:black;
+  cursor:pointer;
 }

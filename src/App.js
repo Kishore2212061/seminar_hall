@@ -9,6 +9,8 @@ import "./styles/Auth.css";
 import AppLayout from "./components/AppLayout";
 import HallStatus from "./components/HallStatus";
 import Admin from "./components/Admin";
+import ExistingBookings from "./components/ExistingBookings";
+
 const App = () => {
   return (
     <AuthProvider>
@@ -32,40 +34,41 @@ const Navigation = () => {
   return (
     <nav className="navbar">
       <ul className="navbar-list">
-      {!user ? (
-  <>
-    <li><Link to="/register" className="nav-link">Register</Link></li>
-    <li><Link to="/login" className="nav-link">Login</Link></li> {/* Corrected login link */}
-  </>
-) : (
-  <>
-    {/* Check if user is NOT an admin */}
-    { !user.email.includes('hod') && (
-      <>
-        <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
-        <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
-      </>
-    )}
-  </>
-)}
-
+        {!user ? (
+          <>
+            <li><Link to="/register" className="nav-link">Register</Link></li>
+            <li><Link to="/login" className="nav-link">Login</Link></li>
+          </>
+        ) : (
+          <>
+            {/* Show links based on user role */}
+            {!user.email.includes('hod') && (
+              <>
+                <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
+                <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
+                <li><Link to="/existing-bookings" className="nav-link">EXISTING BOOKINGS</Link></li>
+              </>
+            )}
+          </>
+        )}
       </ul>
     </nav>
   );
 };
 
-// Rename the custom routes function to avoid conflicts
+// Custom routes function to avoid conflicts
 const AppRoutes = () => {
   const { user } = useAuth(); // Get user from context
 
   return (
     <RouterRoutes>
       <Route path="/admin" element={<Admin />} />
-    <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
-    <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
-    <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
-    <Route path="/hall-status" element={user ? <HallStatus /> : <Navigate to="/login" />} />
-  </RouterRoutes>
+      <Route path="/existing-bookings" element={<ExistingBookings />} />
+      <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
+      <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
+      <Route path="/hall-status" element={user ? <HallStatus /> : <Navigate to="/login" />} />
+    </RouterRoutes>
   );
 };
 

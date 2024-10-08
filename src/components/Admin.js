@@ -151,59 +151,69 @@ const Admin = () => {
           </tr>
         </thead>
         <tbody>
-          {timeSlots.map((slot) => (
-            <tr key={slot.id}>
-              <td>{slot.time}</td>
-              {weekDates.map((date) => {
-                const currentTime = new Date();
-                const isBooked = bookings[loggedInDepartment]?.[date]?.some(booking => {
-                  const bookingStart = new Date(booking.startTime);
-                  const bookingEnd = new Date(booking.endTime);
-                  const slotStart = new Date(`${date}T${slot.start}:00`);
-                  const slotEnd = new Date(`${date}T${slot.end}:00`);
-                  return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
-                });
+  {timeSlots.map((slot) => (
+    <tr key={slot.id}>
+      <td>{slot.time}</td>
+      {weekDates.map((date) => {
+        const currentTime = new Date();
+        const slotStart = new Date(`${date}T${slot.start}:00`);
+        const slotEnd = new Date(`${date}T${slot.end}:00`);
 
-                const hasFinished = bookings[loggedInDepartment]?.[date]?.some(booking => {
-                  const bookingEnd = new Date(booking.endTime);
-                  return bookingEnd < currentTime;
-                });
+        const isBooked = bookings[loggedInDepartment]?.[date]?.some(booking => {
+          const bookingStart = new Date(booking.startTime);
+          const bookingEnd = new Date(booking.endTime);
+          return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
+        });
 
-                const bookedStaffNames = bookings[loggedInDepartment]?.[date]?.filter(booking => {
-                  const bookingStart = new Date(booking.startTime);
-                  const bookingEnd = new Date(booking.endTime);
-                  const slotStart = new Date(`${date}T${slot.start}:00`);
-                  const slotEnd = new Date(`${date}T${slot.end}:00`);
-                  return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
-                }).map(booking => booking.staffName).join(', ');
+        const hasFinished = bookings[loggedInDepartment]?.[date]?.some(booking => {
+          const bookingEnd = new Date(`${date}T${slot.end}:00`);
+          return bookingEnd < currentTime;
+        });
 
-                let cellClass = '';
-                let cellContent = '';
+        const isActive = bookings[loggedInDepartment]?.[date]?.some(booking => {
+          const bookingStart = new Date(`${date}T${slot.start}:00`);
+          const bookingEnd = new Date(`${date}T${slot.end}:00`);
+          return bookingStart <= currentTime && bookingEnd >= currentTime && !slot.isBreak;
+        });
 
-                if (slot.isBreak) {
-                  cellClass = 'break';
-                  cellContent = 'Break';
-                } else if (hasFinished && isBooked) {
-                  cellClass = 'finished';
-                  cellContent = 'Finished';
-                } else if (!isBooked && currentTime > new Date(`${date}T${slot.end}:00`)) {
-                  cellClass = 'not-booked';
-                  cellContent = 'Not Booked';
-                } else if (isBooked) {
-                  cellClass = 'booked';
-                  cellContent = bookedStaffNames || 'Booked';
-                } else {
-                  cellClass = 'available';
-                  cellContent = 'Available';
-                }
+        const bookedStaffNames = bookings[loggedInDepartment]?.[date]?.filter(booking => {
+          const bookingStart = new Date(booking.startTime);
+          const bookingEnd = new Date(booking.endTime);
+          return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
+        }).map(booking => booking.staffName).join(', ');
 
-                return (
-                  <td key={date} className={cellClass}>{cellContent}</td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
+        let cellClass = '';
+        let cellContent = '';
+
+        if (slot.isBreak) {
+          cellClass = 'break';
+          cellContent = 'Break';
+        } else if (isActive && isBooked) {
+          cellClass = 'active';
+          cellContent =  'Booked';
+        }else if (hasFinished && isBooked ) {
+          cellClass = 'finished';
+          cellContent = 'Finished';
+        }  else if (!isBooked && currentTime > slotEnd) {
+          cellClass = 'not-booked';
+          cellContent = 'Not Booked';
+        } else if (isBooked) {
+          cellClass = 'booked';
+          cellContent = bookedStaffNames || 'Booked';
+        } else {
+          cellClass = 'available';
+          cellContent = 'Available';
+        }
+
+        return (
+          <td key={date} className={cellClass} title={isBooked && bookedStaffNames ? bookedStaffNames : ''}>
+            {cellContent}
+          </td>
+        );
+      })}
+    </tr>
+  ))}
+</tbody>
       </table>
 
 
@@ -223,7 +233,7 @@ const Admin = () => {
           onChange={(e) => setEndDate(e.target.value)}
         />
       </div>
-      <button className="generate-report-btn" onClick={generateReport}>Generate Report</button>
+      <button className="generate-report-btn" o nClick={generateReport}>Generate Report</button>
       <button className="logout-btn" onClick={handleLogout}>Logout</button>
     </div>
   );
