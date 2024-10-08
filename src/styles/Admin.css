@@ -97,3 +97,10 @@
     font-size: 10px; /* Further reduce font size */
   }
 }
+footer {
+  background-color: #34495e; /* Same dark blue-gray */
+  color: #ecf0f1;
+  text-align: center;
+  padding: 20px;
+  animation: fadeIn 1.5s ease-in-out;
+}
