@@ -2,9 +2,10 @@
   margin: 20px;
 }
 
+/* Main Table Style */
 .booking-table {
   display: block;
-  background-color:skyblue;
+  background-color: skyblue;
   border-collapse: collapse;
   margin-top: 20px;
   overflow-x: auto; /* Ensure the table is scrollable on very small screens */
@@ -23,6 +24,7 @@
   color: #ffffff; /* White text for contrast */
 }
 
+/* Status Styles */
 .booked {
   background-color: #34d399; /* Softer green for booked slots */
   color: #ffffff; /* White text for readability */
@@ -48,6 +50,7 @@
   color: #ffffff; /* White text for contrast */
 }
 
+/* Tooltip Styles */
 .booking-table td[title] {
   cursor: pointer;
 }
@@ -65,41 +68,32 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .booking-table th, .booking-table td {
-    padding: 8px; /* Reduce padding for smaller screens */
-    font-size: 12px; /* Adjust font size */
-  }
-
   .admin-container {
     margin: 10px; /* Reduce container margin on smaller screens */
   }
-  
+
   .booking-table {
-    display: block;
-    overflow-x: auto; /* Allow horizontal scrolling */
+    font-size: 14px; /* Adjust font size for better readability */
   }
 
   .booking-table th, .booking-table td {
+    padding: 8px; /* Reduce padding for smaller screens */
+    font-size: 12px; /* Adjust font size */
     white-space: nowrap; /* Prevent cell content from wrapping */
-  }
-
-  .booking-table td {
-    font-size: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .booking-table th, .booking-table td {
-    padding: 6px;
-    font-size: 10px; /* Further reduce font size for very small screens */
-  }
-
   .admin-container {
-    margin: 5px;
+    margin: 5px; /* Further reduce container margin */
   }
 
   .booking-table {
-    font-size: 10px;
-    overflow-x: auto; /* Ensure the table is scrollable on very small screens */
+    font-size: 12px; /* Further reduce font size for small screens */
+  }
+
+  .booking-table th, .booking-table td {
+    padding: 6px; /* Reduce padding further */
+    font-size: 10px; /* Further reduce font size */
   }
 }
