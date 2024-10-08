@@ -97,14 +97,14 @@ const Admin = () => {
     const doc = new jsPDF();
     const title = `Booking Report for ${loggedInDepartment} Department`;
     doc.text(title, 10, 10);
-
+  
     const tableColumn = ['Date', 'Time Slot', 'Staff Name', 'Status'];
     const tableRows = [];
-
+  
     const filteredDates = weekDates.filter(date => {
       return date >= startDate && date <= endDate;
     });
-
+  
     filteredDates.forEach((date) => {
       timeSlots.forEach((slot) => {
         const isBooked = bookings[loggedInDepartment]?.[date]?.some(booking => {
@@ -114,7 +114,7 @@ const Admin = () => {
           const slotEnd = new Date(`${date}T${slot.end}:00`);
           return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
         });
-
+  
         const bookedStaffNames = bookings[loggedInDepartment]?.[date]?.filter(booking => {
           const bookingStart = new Date(booking.startTime);
           const bookingEnd = new Date(booking.endTime);
@@ -122,7 +122,7 @@ const Admin = () => {
           const slotEnd = new Date(`${date}T${slot.end}:00`);
           return (bookingStart < slotEnd && bookingEnd > slotStart) && !slot.isBreak;
         }).map(booking => booking.staffName).join(', ');
-
+  
         tableRows.push([
           new Date(date).toLocaleDateString(),
           slot.time,
@@ -131,11 +131,17 @@ const Admin = () => {
         ]);
       });
     });
-
-    doc.autoTable(tableColumn, tableRows, { startY: 20 });
-    doc.save(`seminar_hall_bookings_${loggedInDepartment}.pdf`);
+  
+    // Auto-table generation
+    try {
+      doc.autoTable(tableColumn, tableRows, { startY: 20 });
+      // Save the PDF file
+      doc.save(`seminar_hall_bookings_${loggedInDepartment}.pdf`);
+    } catch (error) {
+      console.error('Error generating or saving PDF:', error);
+    }
   };
-
+  
   return (
     <div className="admin-container">
       <h1>Seminar Hall Booking - Admin View</h1>
@@ -233,7 +239,7 @@ const Admin = () => {
           onChange={(e) => setEndDate(e.target.value)}
         />
       </div>
-      <button className="generate-report-btn" o nClick={generateReport}>Generate Report</button>
+      <button className="generate-report-btn" onClick={generateReport}>Generate Report</button>
       <button className="logout-btn" onClick={handleLogout}>Logout</button>
     </div>
   );
