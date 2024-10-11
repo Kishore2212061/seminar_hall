@@ -31,7 +31,6 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   const [focused, setFocused] = useState(false); 
 const staffNamesList = [
   'Dr.V.Gomathi',
-  'Dr. D.Manimegalai',
   'Dr.K.Mohaideen Pitchai',
   'Dr.S.Kalaiselvi',
   'Dr.J.Naskath',
