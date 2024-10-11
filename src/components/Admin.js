@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import '../styles/Admin.css';
-import { getAuth } from "firebase/auth";
+import { getAuth,onAuthStateChanged } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
@@ -141,6 +141,31 @@ const Admin = () => {
       console.error('Error generating or saving PDF:', error);
     }
   };
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+  
+      // Handle the mobile back button (or browser back navigation)
+      window.onpopstate = function () {
+        // This event is triggered when the back button is pressed
+        signOut(auth)
+          .then(() => {
+          })
+          .catch((error) => {
+          });
+      };
+  
+      // Also handle when the user closes the browser window or tab
+      window.onbeforeunload = function () {
+        signOut(auth)
+          .then(() => {
+          })
+          .catch((error) => {
+          });
+      };
+    } else {
+    }
+  });
+
   
   return (
     <div className="admin-container">
