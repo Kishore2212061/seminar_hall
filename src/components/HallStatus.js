@@ -29,7 +29,38 @@ const HallStatus = ({ selectedStartTime, selectedEndTime }) => {
   const navigate = useNavigate();
   const auth = getAuth();
   const [focused, setFocused] = useState(false); 
-  const staffNamesList = ['mr.Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Adams'];
+const staffNamesList = [
+  'Dr.V.Gomathi',
+  'Dr. D.Manimegalai',
+  'Dr.K.Mohaideen Pitchai',
+  'Dr.S.Kalaiselvi',
+  'Dr.J.Naskath',
+  'Dr.R.Rajakumari',
+  'Mr.D.Vijayakumar',
+  'Dr.G.SivakamaSundari',
+  'Dr.B.Shunmugapriya',
+  'Dr.S.Dheenathayalan',
+  'Mr.A.Shenbagharaman',
+  'Mr.K.Rajkumar',
+  'Ms.D.ThamaraiSelvi',
+  'Ms.M.Kanthimathi',
+  'Ms. D. Abisha',
+  'Mr.Karthikeyan',
+  'P.Priyadharshini',
+  'R.Vazhan Arul Santhiya',
+  'Ms.R.Navedha Evanjalin',
+  'Ms.A.Lincy',
+  'Dr.J.Ida Christy',
+  'Ms.S.G.Janani Ratthna',
+  'Ms.R.Rathi Pathi',
+  'Ms.M.Pappathi Jancy Rani',
+  'Ms.K.Amsaveni',
+  'Ms.R.Srimathi',
+  'Ms.G.Pavithra',
+  'Ms.K.Amutha',
+  'Ms.M.Mahalakshmi'
+];
+
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
