@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes as RouterRoutes, Navigate, Link } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/authContext"; // Import AuthProvider
 import Login from "./components/Login";
@@ -42,12 +42,14 @@ const Navigation = () => {
         ) : (
           <>
             {/* Show links based on user role */}
-            {!user.email.includes('hod') && (
+            {user.email && !user.email.includes('hod') ? (
               <>
                 <li><Link to="/hall-booking" className="nav-link">DEFAULT BOOKING</Link></li>
                 <li><Link to="/hall-status" className="nav-link">CUSTOMIZED BOOKING</Link></li>
                 <li><Link to="/existing-bookings" className="nav-link">EXISTING BOOKINGS</Link></li>
               </>
+            ) : (
+              <li><Link to="/admin" className="nav-link">Admin Panel</Link></li>
             )}
           </>
         )}
@@ -62,8 +64,8 @@ const AppRoutes = () => {
 
   return (
     <RouterRoutes>
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/existing-bookings" element={<ExistingBookings />} />
+      <Route path="/admin" element={user?.email?.includes('hod') ? <Admin /> : <Navigate to="/login" />} />
+      <Route path="/existing-bookings" element={user ? <ExistingBookings /> : <Navigate to="/login" />} />
       <Route path="/register" element={!user ? <Register /> : <Navigate to="/hall-booking" />} />
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/hall-booking" />} />
       <Route path="/hall-booking" element={user ? <HallBooking /> : <Navigate to="/login" />} />
