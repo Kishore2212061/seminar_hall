@@ -1,4 +1,3 @@
-/* Base Styles */
 body {
   background-color: #f7f7f7; /* Soft neutral background for a clean look */
   font-family: 'Roboto', sans-serif;
@@ -211,17 +210,21 @@ footer {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 16px; /* Default size */
-  max-width: 120%; /* Ensure it doesn't exceed the container */
-  overflow: scroll;
+  /* max-width: 200%; */
+   /* Ensure it doesn't exceed the container */
+  /* overflow: scroll; */
   list-style-type: disc; /* Use dots for list items */
   margin: 0;
-  padding-left: 30px; /* Adds space to the left for the list style */
+  padding-left: 30px; 
+  /* Adds space to the left for the list style */
 }
 .suggestions-list li {
-  margin-bottom: 10px; /* Adds space between each list item */
+  margin-bottom: 10px; 
+  /* Adds space between each list item */
 }
 @media (max-width: 600px) {
   .suggestions-list {
+    overflow: scroll;
     font-size: 14px; /* Adjust font size for mobile */
     padding: 8px; /* Reduce padding for a smaller view */
     padding-left: 16px; /* Adjust padding for smaller screens */
