@@ -217,7 +217,9 @@ footer {
   margin: 0;
   padding-left: 30px; /* Adds space to the left for the list style */
 }
-
+.suggestions-list li {
+  margin-bottom: 10px; /* Adds space between each list item */
+}
 @media (max-width: 600px) {
   .suggestions-list {
     font-size: 14px; /* Adjust font size for mobile */
