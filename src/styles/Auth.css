@@ -203,8 +203,21 @@ footer {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
-.suggestions-list{
-  background-color:#fff;
-  color:black;
-  cursor:pointer;
+.suggestions-list {
+  background-color: #fff;
+  color: black;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px; /* Default size */
+  max-width: 100%; /* Ensure it doesn't exceed the container */
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .suggestions-list {
+    font-size: 14px; /* Adjust font size for mobile */
+    padding: 8px; /* Reduce padding for a smaller view */
+  }
 }
