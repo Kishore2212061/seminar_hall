@@ -212,12 +212,16 @@ footer {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-size: 16px; /* Default size */
   max-width: 100%; /* Ensure it doesn't exceed the container */
-  overflow: hidden;
+  overflow: scroll;
+  list-style-type: disc; /* Use dots for list items */
+  margin: 0;
+  padding-left: 20px; /* Adds space to the left for the list style */
 }
 
 @media (max-width: 600px) {
   .suggestions-list {
     font-size: 14px; /* Adjust font size for mobile */
     padding: 8px; /* Reduce padding for a smaller view */
+    padding-left: 16px; /* Adjust padding for smaller screens */
   }
 }
