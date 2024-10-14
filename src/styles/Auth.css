@@ -215,7 +215,7 @@ footer {
   overflow: scroll;
   list-style-type: disc; /* Use dots for list items */
   margin: 0;
-  padding-left: 16px; /* Adds space to the left for the list style */
+  padding-left: 24px; /* Adds space to the left for the list style */
 }
 
 @media (max-width: 600px) {
